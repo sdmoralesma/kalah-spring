@@ -11,16 +11,15 @@ class KalahTest {
 
     @BeforeAll
     public static void setup() {
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.port = 8080;
+        RestAssured.baseURI = "http://localhost:8080";
     }
 
     @Test
     void verifyOK() {
-        get("/lotto")
+        get("/")
             .then()
             .statusCode(200)
-            .body("lotto.lottoId", equalTo(5));
+            .body(equalTo("hello"));
     }
 
 }
