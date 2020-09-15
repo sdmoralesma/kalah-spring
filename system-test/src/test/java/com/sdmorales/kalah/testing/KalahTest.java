@@ -1,15 +1,12 @@
 package com.sdmorales.kalah.testing;
 
-import static io.restassured.RestAssured.get;
-import static io.restassured.RestAssured.post;
+import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.put;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,28 +18,28 @@ class KalahTest {
     }
 
     @Test
-    void verifyPingOk() {
-        get("/ping")
-            .then()
-            .statusCode(200)
-            .body(equalTo("pong"));
-    }
-
-    @Test
     void verifyGameIsCreatedOk() {
-        post("/games")
+        given()
+            .body(KalahFixtures.createGameAsJson())
+            .contentType(ContentType.JSON)
+            .when()
+            .post("/games")
             .then()
             .statusCode(200)
             .contentType(ContentType.JSON)
-            .body("id", is(notNullValue()));
+            .body("id", is(greaterThan(0)))
+            .body("userA", is("sergio"))
+            .body("userB", is("david"));
     }
 
     @Test
     void verifyMakeMoveIsOk() {
-        put("/games/{gameId}/pits/{pitId}", UUID.randomUUID().toString(), UUID.randomUUID().toString())
+        put("/games/{gameId}/pits/{pitId}", 1, 1)
             .then()
             .statusCode(200)
             .contentType(ContentType.JSON)
-            .body("id", is(notNullValue()));
+            .body("id", is(greaterThan(0)))
+            .body("userA", is("sergio"))
+            .body("userB", is("david"));
     }
 }

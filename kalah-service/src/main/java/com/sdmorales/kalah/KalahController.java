@@ -1,10 +1,10 @@
 package com.sdmorales.kalah;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,19 +16,14 @@ public class KalahController {
         this.kalahService = kalahService;
     }
 
-    @GetMapping("/ping")
-    public ResponseEntity<String> ping() {
-        return ResponseEntity.ok("pong");
-    }
-
     @PostMapping("/games")
-    public ResponseEntity<Game> createGame() {
-        Game game = kalahService.createGame();
-        return ResponseEntity.ok(game);
+    public ResponseEntity<Game> createGame(@RequestBody Game game) {
+        Game gameToSave = new Game(game.getUserA(), game.getUserB());
+        return ResponseEntity.ok(kalahService.createGame(gameToSave));
     }
 
     @PutMapping("/games/{gameId}/pits/{pitId}")
-    public ResponseEntity<Game> makeMove(@PathVariable("gameId") String gameId, @PathVariable("pitId") String pitId) {
-        return ResponseEntity.ok(kalahService.makeMove());
+    public ResponseEntity<Game> makeMove(@PathVariable("gameId") Long gameId, @PathVariable("pitId") Long pitId) {
+        return ResponseEntity.ok(kalahService.makeMove(gameId, pitId));
     }
 }
