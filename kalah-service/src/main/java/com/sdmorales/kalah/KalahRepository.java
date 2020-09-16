@@ -7,5 +7,4 @@ public interface KalahRepository extends CrudRepository<Game, Long> {
 
     List<Game> findAll();
 
-    Game findById(long id);
 }
