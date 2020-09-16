@@ -1,7 +1,8 @@
 package com.sdmorales.kalah;
 
-import javax.transaction.Transactional;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class KalahService {
@@ -25,4 +26,8 @@ public class KalahService {
         return gameById;
     }
 
+    @Transactional(readOnly = true)
+    public Optional<Game> findByGameId(Long gameId) {
+        return kalahRepository.findById(gameId);
+    }
 }
