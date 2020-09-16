@@ -22,8 +22,7 @@ public class KalahController {
 
     @PostMapping("/games")
     public ResponseEntity<Game> createGame(@RequestBody Game game) {
-        Game gameToSave = new Game(game.getUserA(), game.getUserB());
-        Game persistedGame = kalahService.createGame(gameToSave);
+        Game persistedGame = kalahService.createGame(game);
         return ResponseEntity.created(buildUriFor(persistedGame)).body(persistedGame);
     }
 

@@ -1,5 +1,6 @@
 package com.sdmorales.kalah;
 
+import com.sdmorales.kalah.domain.Board;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +16,15 @@ public class KalahService {
 
     @Transactional
     public Game createGame(Game game) {
-        return kalahRepository.save(game);
+        Game gameToSave = new Game(game.getUserA(), game.getUserB(), new Board().asJson());
+        return kalahRepository.save(gameToSave);
     }
 
     @Transactional
     public Game makeMove(Long gameId, Long pitId) {
-        Game gameById = kalahRepository.findById(gameId)
-            .orElseThrow(IllegalStateException::new);
-        //todo: make move
-        return gameById;
+        Game game = kalahRepository.findById(gameId).orElseThrow(IllegalStateException::new);
+        //todo: connect me
+        return game;
     }
 
     @Transactional(readOnly = true)

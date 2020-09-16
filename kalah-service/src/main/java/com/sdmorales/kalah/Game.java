@@ -16,13 +16,15 @@ public class Game {
 
     private String userA;
     private String userB;
+    private String board;
 
     public Game() {
     }
 
-    public Game(String userA, String userB) {
+    public Game(String userA, String userB, String board) {
         this.userA = userA;
         this.userB = userB;
+        this.board = board;
     }
 
     public Long getId() {
@@ -35,6 +37,10 @@ public class Game {
 
     public String getUserB() {
         return userB;
+    }
+
+    public String getBoard() {
+        return board;
     }
 
     @Override
