@@ -41,7 +41,7 @@ public class KalahController {
     }
 
     @PutMapping("/games/{gameId}/pits/{pitId}")
-    public ResponseEntity<Game> makeMove(@PathVariable("gameId") Long gameId, @PathVariable("pitId") Long pitId) {
+    public ResponseEntity<Game> makeMove(@PathVariable("gameId") Long gameId, @PathVariable("pitId") Integer pitId) {
         return ResponseEntity.ok(kalahService.makeMove(gameId, pitId));
     }
 }

@@ -25,6 +25,10 @@ public class Board {
         this.map = Collections.unmodifiableMap(map);
     }
 
+    public Map<Integer, Integer> asMap() {
+        return map;
+    }
+
     public String asJson() {
         try {
             return OBJECT_MAPPER.writeValueAsString(map);
@@ -33,16 +37,17 @@ public class Board {
         }
     }
 
-    public static Map<Integer, Integer> jsonAsBoard(String json) {
+    public static Board fromJson(String json) {
         try {
-            return OBJECT_MAPPER.readValue(json, new TypeReference<>() {
+            Map<Integer, Integer> map = OBJECT_MAPPER.readValue(json, new TypeReference<>() {
             });
+            return new Board(map);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Can not convert json as map: " + json);
         }
     }
 
-    public Map<Integer, Integer> move(int pitId, Orientation orientation) {
+    public Board move(int pitId, Orientation orientation) {
         validateIfBoardContainsThePitId(pitId, map);
         validateIfPitIdIsNotAKalah(pitId);
         validateNorthPlayerSelectedPitId(pitId, orientation);
@@ -63,7 +68,7 @@ public class Board {
             currentStones--;
         }
 
-        return Collections.unmodifiableMap(newMap);
+        return new Board(newMap);
     }
 
     private void validatePitHasStones(int pitId, Map<Integer, Integer> map) {

@@ -1,6 +1,7 @@
 package com.sdmorales.kalah;
 
 import com.sdmorales.kalah.domain.Board;
+import com.sdmorales.kalah.domain.Orientation;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +22,11 @@ public class KalahService {
     }
 
     @Transactional
-    public Game makeMove(Long gameId, Long pitId) {
+    public Game makeMove(Long gameId, Integer pitId) {
         Game game = kalahRepository.findById(gameId).orElseThrow(IllegalStateException::new);
-        //todo: connect me
+        Board board = Board.fromJson(game.getBoard());
+        Board newBoard = board.move(pitId, Orientation.NORTH);//todo: remove hardcoded orientation
+        game.setBoard(newBoard.asJson());
         return game;
     }
 

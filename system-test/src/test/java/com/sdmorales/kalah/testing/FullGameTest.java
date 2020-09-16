@@ -27,7 +27,7 @@ public class FullGameTest {
 
     @Test
     void verifyFullGameOk() {
-        given()
+        Response responseCreateGame = given()
             .body(KalahFixtures.createGameAsJson())
             .contentType(ContentType.JSON)
             .when()
@@ -38,9 +38,12 @@ public class FullGameTest {
             .header("Location", is(not(emptyString())))
             .body("id", is(greaterThan(0)))
             .body("userA", is("sergio"))
-            .body("userB", is("david"));
+            .body("userB", is("david"))
+            .extract().response();
 
-        Response response = put("/games/{gameId}/pits/{pitId}", 1, 1)
+        long gameId = responseCreateGame.jsonPath().getLong("id");
+
+        Response response = put("/games/{gameId}/pits/{pitId}", gameId, 1)
             .then()
             .statusCode(200)
             .contentType(ContentType.JSON)
@@ -55,8 +58,8 @@ public class FullGameTest {
 
     private Map<String, Integer> createExpectedBoard() {
         return Map
-            .ofEntries(entry("1", 6), entry("2", 6), entry("3", 6), entry("4", 6), entry("5", 6), entry("6", 6),
-                entry("7", 0),
+            .ofEntries(entry("1", 0), entry("2", 7), entry("3", 7), entry("4", 7), entry("5", 7), entry("6", 7),
+                entry("7", 1),
                 entry("8", 6), entry("9", 6), entry("10", 6), entry("11", 6), entry("12", 6), entry("13", 6),
                 entry("14", 0));
     }

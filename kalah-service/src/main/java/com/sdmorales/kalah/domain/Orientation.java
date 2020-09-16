@@ -1,6 +1,6 @@
 package com.sdmorales.kalah.domain;
 
-enum Orientation {
+public enum Orientation {
     NORTH,
     SOUTH
 }

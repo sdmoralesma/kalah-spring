@@ -43,6 +43,18 @@ public class Game {
         return board;
     }
 
+    public void setUserA(String userA) {
+        this.userA = userA;
+    }
+
+    public void setUserB(String userB) {
+        this.userB = userB;
+    }
+
+    public void setBoard(String board) {
+        this.board = board;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
