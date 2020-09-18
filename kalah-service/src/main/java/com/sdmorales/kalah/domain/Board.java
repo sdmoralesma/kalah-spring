@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class Board {
 
+    private static final int FIRST_BOARD_POSITION = 1;
+    private static final int LAST_BOARD_POSITION = 14;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final Map<Integer, Integer> map;
@@ -59,8 +61,8 @@ public class Board {
         newMap.put(pitId, 0);
         while (currentStones > 0) {
             pitId++;
-            if (pitId == 15) {
-                pitId = 1;
+            if (pitId > LAST_BOARD_POSITION) {
+                pitId = FIRST_BOARD_POSITION;
             }
 
             Integer value = newMap.get(pitId) + 1;
