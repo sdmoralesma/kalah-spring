@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Board {
 
@@ -50,6 +51,7 @@ public class Board {
     }
 
     public Board move(int pitId, Orientation orientation) {
+        Objects.requireNonNull(orientation);
         validateIfBoardContainsThePitId(pitId, map);
         validateIfPitIdIsNotAKalah(pitId);
         validateNorthPlayerSelectedPitId(pitId, orientation);
