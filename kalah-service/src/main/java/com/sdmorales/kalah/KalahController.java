@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,8 +20,8 @@ public class KalahController {
     }
 
     @PostMapping("/games")
-    public ResponseEntity<Game> createGame(@RequestBody Game game) {
-        Game persistedGame = kalahService.createGame(game);
+    public ResponseEntity<Game> createGame() {
+        Game persistedGame = kalahService.createGame();
         return ResponseEntity.created(buildUriFor(persistedGame)).body(persistedGame);
     }
 
@@ -42,6 +41,8 @@ public class KalahController {
 
     @PutMapping("/games/{gameId}/pits/{pitId}")
     public ResponseEntity<Game> makeMove(@PathVariable("gameId") Long gameId, @PathVariable("pitId") Integer pitId) {
-        return ResponseEntity.ok(kalahService.makeMove(gameId, pitId));
+        Optional<Game> optionalGame = kalahService.makeMove(gameId, pitId);
+        return optionalGame.map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

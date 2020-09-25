@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.put;
 import static java.util.Map.entry;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -16,6 +17,7 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class KalahTest {
@@ -40,14 +42,13 @@ class KalahTest {
             .contentType(ContentType.JSON)
             .header("Location", is(not(emptyString())))
             .body("id", is(greaterThan(0)))
-            .body("userA", is(USER_A_NAME))
-            .body("userB", is(USER_B_NAME));
+            .body("userA", is(not(emptyOrNullString())))
+            .body("userB", is(not(emptyOrNullString())));
     }
 
     @Test
     void verifyGameIsRetrievedByIdOk() {
         given()
-            .body(KalahFixtures.createGameAsJson())
             .contentType(ContentType.JSON)
             .when()
             .get("/games/{gameId}", 1)
@@ -55,8 +56,8 @@ class KalahTest {
             .statusCode(200)
             .contentType(ContentType.JSON)
             .body("id", is(greaterThan(0)))
-            .body("userA", is(USER_A_NAME))
-            .body("userB", is(USER_B_NAME));
+            .body("userA", is(not(emptyOrNullString())))
+            .body("userB", is(not(emptyOrNullString())));
     }
 
     @Test
@@ -66,14 +67,13 @@ class KalahTest {
             .statusCode(200)
             .contentType(ContentType.JSON)
             .body("id", is(greaterThan(0)))
-            .body("userA", is(USER_A_NAME))
-            .body("userB", is(USER_B_NAME));
+            .body("userA", is(not(emptyOrNullString())))
+            .body("userB", is(not(emptyOrNullString())));
     }
 
     @Test
     void verifyFullGameOk() {
         Response responseCreateGame = given()
-            .body(KalahFixtures.createGameAsJson())
             .contentType(ContentType.JSON)
             .when()
             .post("/games")
@@ -82,8 +82,8 @@ class KalahTest {
             .contentType(ContentType.JSON)
             .header("Location", is(not(emptyString())))
             .body("id", is(greaterThan(0)))
-            .body("userA", is("sergio"))
-            .body("userB", is("david"))
+            .body("userA", is(not(emptyOrNullString())))
+            .body("userB", is(not(emptyOrNullString())))
             .extract().response();
 
         long gameId = responseCreateGame.jsonPath().getLong("id");
@@ -93,8 +93,8 @@ class KalahTest {
             .statusCode(200)
             .contentType(ContentType.JSON)
             .body("id", is(greaterThan(0)))
-            .body("userA", is("sergio"))
-            .body("userB", is("david"))
+            .body("userA", is(not(emptyOrNullString())))
+            .body("userB", is(not(emptyOrNullString())))
             .extract().response();
 
         Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
@@ -107,5 +107,16 @@ class KalahTest {
                 entry("7", 1),
                 entry("8", 6), entry("9", 6), entry("10", 6), entry("11", 6), entry("12", 6), entry("13", 6),
                 entry("14", 0));
+    }
+
+    @Nested
+    class ErrorHandling {
+
+        @Test
+        void nonExistingGame() {
+            put("/games/{gameId}/pits/{pitId}", 100, 100)
+                .then()
+                .statusCode(404);
+        }
     }
 }

@@ -98,7 +98,7 @@ class BoardTest {
         assertTrue(exception.getMessage().contains("Pit id not valid"));
     }
 
-    private Map<Integer, Integer> createEmptyBoard(){
+    private Map<Integer, Integer> createEmptyBoard() {
         return Map.ofEntries(entry(1, 0), entry(2, 0), entry(3, 0), entry(4, 0), entry(5, 0), entry(6, 0), entry(7, 0),
             entry(8, 0), entry(9, 0), entry(10, 0), entry(11, 0), entry(12, 0), entry(13, 0), entry(14, 0));
     }
