@@ -19,8 +19,8 @@ class BoardTest {
     }
 
     @Test
-    void moveOneStoneOnPit1ForNorthPlayerOk() {
-        Board result = board.move(1, Orientation.NORTH);
+    void moveOneStoneOnPit1ForSouthPlayerOk() {
+        Board result = board.move(1, Orientation.SOUTH);
 
         assertEquals(
             Map.ofEntries(entry(1, 0), entry(2, 7), entry(3, 7), entry(4, 7), entry(5, 7), entry(6, 7), entry(7, 1),
@@ -29,8 +29,8 @@ class BoardTest {
     }
 
     @Test
-    void moveOneStoneOnPit3ForNorthPlayerOk() {
-        Board result = board.move(3, Orientation.NORTH);
+    void moveOneStoneOnPit3ForSouthPlayerOk() {
+        Board result = board.move(3, Orientation.SOUTH);
 
         assertEquals(
             Map.ofEntries(entry(1, 6), entry(2, 6), entry(3, 0), entry(4, 7), entry(5, 7), entry(6, 7), entry(7, 1),
@@ -39,8 +39,8 @@ class BoardTest {
     }
 
     @Test
-    void moveOneStoneOnPit8ForSouthPlayerOk() {
-        Board result = board.move(8, Orientation.SOUTH);
+    void moveOneStoneOnPit8ForNorthPlayerOk() {
+        Board result = board.move(8, Orientation.NORTH);
 
         assertEquals(
             Map.ofEntries(entry(1, 6), entry(2, 6), entry(3, 6), entry(4, 6), entry(5, 6), entry(6, 6), entry(7, 0),
@@ -50,7 +50,7 @@ class BoardTest {
 
     @Test
     void moveOneStoneOnPit10ForSouthPlayerOk() {
-        Board result = board.move(10, Orientation.SOUTH);
+        Board result = board.move(10, Orientation.NORTH);
 
         assertEquals(
             Map.ofEntries(entry(1, 7), entry(2, 7), entry(3, 6), entry(4, 6), entry(5, 6), entry(6, 6), entry(7, 0),
@@ -60,39 +60,39 @@ class BoardTest {
 
     @Test
     void verifyPitDoesNotHaveStones() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class,
-            () -> new Board(createEmptyBoard()).move(1, Orientation.NORTH));
+        GameException exception = assertThrows(GameException.class,
+            () -> new Board(createEmptyBoard()).move(1, Orientation.SOUTH));
 
         assertTrue(exception.getMessage().contains("Pit is empty"));
     }
 
     @Test
     void verifyNorthPlayerCanNotMoveSouthPits() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class,
-            () -> board.move(10, Orientation.NORTH));
+        GameException exception = assertThrows(GameException.class,
+            () -> board.move(1, Orientation.NORTH));
 
-        assertTrue(exception.getMessage().contains("North player"));
+        assertEquals("North player can only select pitId between 8 and 13", exception.getMessage());
     }
 
     @Test
-    void verifySouthPlayerCanNotMoveSouthPits() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class,
-            () -> board.move(1, Orientation.SOUTH));
+    void verifySouthPlayerCanNotMoveNorthPits() {
+        GameException exception = assertThrows(GameException.class,
+            () -> board.move(10, Orientation.SOUTH));
 
-        assertTrue(exception.getMessage().contains("South player"));
+        assertEquals("South player can only select pitId between 1 and 6", exception.getMessage());
     }
 
     @Test
     void verifyPlayersCanNotSelectKalahPitId() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class,
-            () -> board.move(7, Orientation.NORTH));
+        GameException exception = assertThrows(GameException.class,
+            () -> board.move(7, Orientation.SOUTH));
 
-        assertTrue(exception.getMessage().contains("Can not select a kalah"));
+        assertTrue(exception.getMessage().contains("Can not select a Kalah"));
     }
 
     @Test
-    void verifyPlayersOnlyMoveInValidPitIds() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class,
+    void verifySouthPlayerCanNotMoveOnInvalidPitId() {
+        GameException exception = assertThrows(GameException.class,
             () -> board.move(0, Orientation.SOUTH));
 
         assertTrue(exception.getMessage().contains("Pit id not valid"));

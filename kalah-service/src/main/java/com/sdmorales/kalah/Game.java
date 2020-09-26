@@ -17,14 +17,16 @@ public class Game {
     private String userA;
     private String userB;
     private String board;
+    private String turn;
 
     public Game() {
     }
 
-    public Game(String userA, String userB, String board) {
+    public Game(String userA, String userB, String board, String turn) {
         this.userA = userA;
         this.userB = userB;
         this.board = board;
+        this.turn = turn;
     }
 
     public Long getId() {
@@ -43,6 +45,10 @@ public class Game {
         return board;
     }
 
+    public String getTurn() {
+        return turn;
+    }
+
     public void setUserA(String userA) {
         this.userA = userA;
     }
@@ -53,6 +59,10 @@ public class Game {
 
     public void setBoard(String board) {
         this.board = board;
+    }
+
+    public void setTurn(String turn) {
+        this.turn = turn;
     }
 
     @Override
@@ -78,6 +88,8 @@ public class Game {
             .add("id=" + id)
             .add("userA='" + userA + "'")
             .add("userB='" + userB + "'")
+            .add("board='" + board + "'")
+            .add("turn='" + turn + "'")
             .toString();
     }
 }

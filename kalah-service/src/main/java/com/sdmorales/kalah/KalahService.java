@@ -20,7 +20,8 @@ public class KalahService {
     public Game createGame() {
         UUID userAId = UUID.randomUUID();
         UUID userBId = UUID.randomUUID();
-        Game gameToSave = new Game(userAId.toString(), userBId.toString(), new Board().asJson());
+        String turn = Orientation.SOUTH.toString();// Could be randomized
+        Game gameToSave = new Game(userAId.toString(), userBId.toString(), new Board().asJson(), turn);
         return kalahRepository.save(gameToSave);
     }
 
@@ -28,13 +29,15 @@ public class KalahService {
     public Optional<Game> makeMove(Long gameId, Integer pitId) {
         Optional<Game> optionalGame = kalahRepository.findById(gameId);
         if (optionalGame.isEmpty()) {
-            return optionalGame;
+            return Optional.empty();
         }
 
         Game game = optionalGame.get();
         Board board = Board.fromJson(game.getBoard());
-        Board newBoard = board.move(pitId, Orientation.NORTH);//todo: remove hardcoded orientation
+        Orientation turn = Orientation.fromString(game.getTurn());
+        Board newBoard = board.move(pitId, turn);
         game.setBoard(newBoard.asJson());
+        game.setTurn(Orientation.flip(turn).toString());
         return Optional.of(game);
     }
 

@@ -78,31 +78,31 @@ public class Board {
     private void validatePitHasStones(int pitId, Map<Integer, Integer> map) {
         Integer currentStones = map.get(pitId);
         if (currentStones <= 0) {
-            throw new IllegalStateException("Pit is empty:" + pitId);
+            throw new GameException("Pit is empty:" + pitId);
         }
     }
 
     private void validateSouthPlayerSelectedPitId(int pitId, Orientation orientation) {
-        if (pitId <= 6 && orientation == Orientation.SOUTH) {
-            throw new IllegalStateException("South player can only select pitId between 8 and 13");
+        if (pitId >= 7 && orientation == Orientation.SOUTH) {
+            throw new GameException("South player can only select pitId between 1 and 6");
         }
     }
 
     private void validateNorthPlayerSelectedPitId(int pitId, Orientation orientation) {
-        if (pitId >= 7 && orientation == Orientation.NORTH) {
-            throw new IllegalStateException("North player can only select pitId between 1 and 6");
+        if (pitId <= 6 && orientation == Orientation.NORTH) {
+            throw new GameException("North player can only select pitId between 8 and 13");
         }
     }
 
     private void validateIfBoardContainsThePitId(int pitId, Map<Integer, Integer> newMap) {
         if (!newMap.containsKey(pitId)) {
-            throw new IllegalStateException("Pit id not valid: " + pitId);
+            throw new GameException("Pit id not valid: " + pitId);
         }
     }
 
     private void validateIfPitIdIsNotAKalah(int pitId) {
         if (pitId == 7 || pitId == 14) {
-            throw new IllegalStateException("Can not select a kalah, choose a pit: 1-6 or 8-13");
+            throw new GameException("Can not select a Kalah, choose a pit: 1-6 or 8-13");
         }
     }
 
