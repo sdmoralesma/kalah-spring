@@ -1,12 +1,12 @@
 package com.sdmorales.kalah.domain;
 
-import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Map;
+import java.util.TreeMap;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class BoardTest {
@@ -22,62 +22,48 @@ class BoardTest {
     void moveOneStoneOnPit1ForSouthPlayerOk() {
         Board result = board.move(1, Orientation.SOUTH);
 
-        assertEquals(
-            Map.ofEntries(entry(1, 0), entry(2, 7), entry(3, 7), entry(4, 7), entry(5, 7), entry(6, 7), entry(7, 1),
-                entry(8, 6), entry(9, 6), entry(10, 6), entry(11, 6), entry(12, 6), entry(13, 6), entry(14, 0)),
-            result.asMap());
+        assertBoardEquals(new Board(0, 0, 7, 7, 7, 7, 7, 1, 6, 6, 6, 6, 6, 6, 0), result);
     }
 
     @Test
     void moveOneStoneOnPit3ForSouthPlayerOk() {
         Board result = board.move(3, Orientation.SOUTH);
 
-        assertEquals(
-            Map.ofEntries(entry(1, 6), entry(2, 6), entry(3, 0), entry(4, 7), entry(5, 7), entry(6, 7), entry(7, 1),
-                entry(8, 7), entry(9, 7), entry(10, 6), entry(11, 6), entry(12, 6), entry(13, 6), entry(14, 0)),
-            result.asMap());
+        assertBoardEquals(new Board(0, 6, 6, 0, 7, 7, 7, 1, 7, 7, 6, 6, 6, 6, 0), result);
     }
 
     @Test
     void moveOneStoneOnPit8ForNorthPlayerOk() {
-        Board result = board.move(8, Orientation.NORTH);
+        Board result = new Board(1, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0).move(8, Orientation.NORTH);
 
-        assertEquals(
-            Map.ofEntries(entry(1, 6), entry(2, 6), entry(3, 6), entry(4, 6), entry(5, 6), entry(6, 6), entry(7, 0),
-                entry(8, 0), entry(9, 7), entry(10, 7), entry(11, 7), entry(12, 7), entry(13, 7), entry(14, 1)),
-            result.asMap());
+        assertBoardEquals(new Board(1, 6, 6, 6, 6, 6, 6, 0, 0, 7, 7, 7, 7, 7, 1), result);
     }
 
     @Test
-    void moveOneStoneOnPit10ForSouthPlayerOk() {
-        Board result = board.move(10, Orientation.NORTH);
+    void moveOneStoneOnPit10ForNorthPlayerOk() {
+        Board result = new Board(1, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0).move(10, Orientation.NORTH);
 
-        assertEquals(
-            Map.ofEntries(entry(1, 7), entry(2, 7), entry(3, 6), entry(4, 6), entry(5, 6), entry(6, 6), entry(7, 0),
-                entry(8, 6), entry(9, 6), entry(10, 0), entry(11, 7), entry(12, 7), entry(13, 7), entry(14, 1)),
-            result.asMap());
+        assertBoardEquals(new Board(1, 7, 7, 6, 6, 6, 6, 0, 6, 6, 0, 7, 7, 7, 1), result);
     }
 
     @Test
-    void verifyPitDoesNotHaveStones() {
+    void verifyThrowsExceptionIfPitDoesNotHaveStones() {
         GameException exception = assertThrows(GameException.class,
-            () -> new Board(createEmptyBoard()).move(1, Orientation.SOUTH));
+            () -> new Board(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).move(1, Orientation.SOUTH));
 
         assertTrue(exception.getMessage().contains("Pit is empty"));
     }
 
     @Test
     void verifyNorthPlayerCanNotMoveSouthPits() {
-        GameException exception = assertThrows(GameException.class,
-            () -> board.move(1, Orientation.NORTH));
+        GameException exception = assertThrows(GameException.class, () -> board.move(1, Orientation.NORTH));
 
         assertEquals("North player can only select pitId between 8 and 13", exception.getMessage());
     }
 
     @Test
     void verifySouthPlayerCanNotMoveNorthPits() {
-        GameException exception = assertThrows(GameException.class,
-            () -> board.move(10, Orientation.SOUTH));
+        GameException exception = assertThrows(GameException.class, () -> board.move(10, Orientation.SOUTH));
 
         assertEquals("South player can only select pitId between 1 and 6", exception.getMessage());
     }
@@ -87,20 +73,34 @@ class BoardTest {
         GameException exception = assertThrows(GameException.class,
             () -> board.move(7, Orientation.SOUTH));
 
-        assertTrue(exception.getMessage().contains("Can not select a Kalah"));
+        assertEquals("Can not select a Kalah, choose a pit: 1-6 or 8-13", exception.getMessage());
     }
 
     @Test
     void verifySouthPlayerCanNotMoveOnInvalidPitId() {
-        GameException exception = assertThrows(GameException.class,
-            () -> board.move(0, Orientation.SOUTH));
+        GameException exception = assertThrows(GameException.class, () -> board.move(100, Orientation.SOUTH));
 
-        assertTrue(exception.getMessage().contains("Pit id not valid"));
+        assertEquals("Pit id not valid: 100", exception.getMessage());
     }
 
-    private Map<Integer, Integer> createEmptyBoard() {
-        return Map.ofEntries(entry(1, 0), entry(2, 0), entry(3, 0), entry(4, 0), entry(5, 0), entry(6, 0), entry(7, 0),
-            entry(8, 0), entry(9, 0), entry(10, 0), entry(11, 0), entry(12, 0), entry(13, 0), entry(14, 0));
+    @Test
+    void verifyNorthPlayerCanNotMoveWhenIsNotHisTurn() {
+        GameException exception = assertThrows(GameException.class, () -> board.move(10, Orientation.NORTH));
+
+        assertEquals("It is turn of the SOUTH player", exception.getMessage());
     }
 
+    @Test
+    @Disabled
+    void verifyLastStoneInKalahAllowsNewTurnForSouthPlayer() {
+        Board firstResult = board.move(1, Orientation.SOUTH);
+        assertBoardEquals(new Board(0, 0, 7, 7, 7, 7, 7, 1, 6, 6, 6, 6, 6, 6, 0), firstResult);
+
+        Board secondResult = board.move(1, Orientation.SOUTH);
+        assertBoardEquals(new Board(0, 0, 0, 8, 8, 8, 8, 8, 7, 7, 6, 6, 6, 6, 0), secondResult);
+    }
+
+    private static void assertBoardEquals(Board expected, Board actual) {
+        assertEquals(new TreeMap<>(expected.asMap()), new TreeMap<>(actual.asMap()));
+    }
 }

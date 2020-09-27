@@ -37,7 +37,7 @@ public class KalahService {
         Orientation turn = Orientation.fromString(game.getTurn());
         Board newBoard = board.move(pitId, turn);
         game.setBoard(newBoard.asJson());
-        game.setTurn(Orientation.flip(turn).toString());
+//        game.setTurn(Orientation.flip(turn).toString());//TODO: delete TURN from DB
         return Optional.of(game);
     }
 

@@ -5,27 +5,46 @@ import static java.util.Map.entry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Board {
 
     private static final int FIRST_BOARD_POSITION = 1;
     private static final int LAST_BOARD_POSITION = 14;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    public static final int KEY_ORIENTATION = 0;
+    public static final int REQUIRED_VALUES_FOR_BOARD = 15;
 
     private final Map<Integer, Integer> map;
 
     public Board() {
-        this.map = Collections.unmodifiableMap(Map
-            .ofEntries(entry(1, 6), entry(2, 6), entry(3, 6), entry(4, 6), entry(5, 6), entry(6, 6), entry(7, 0),
-                entry(8, 6), entry(9, 6), entry(10, 6), entry(11, 6), entry(12, 6), entry(13, 6), entry(14, 0)));
+        this.map = new Board(0, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0).asMap();
     }
 
     public Board(Map<Integer, Integer> map) {
         this.map = Collections.unmodifiableMap(map);
+    }
+
+    public Board(Integer... values) {
+        if (values.length != REQUIRED_VALUES_FOR_BOARD) {
+            throw new IllegalArgumentException("Requires " + REQUIRED_VALUES_FOR_BOARD + " values to create a board");
+        }
+        this.map = fromListToMap(Arrays.asList(values));
+    }
+
+    private Map<Integer, Integer> fromListToMap(List<Integer> list) {
+        return IntStream.rangeClosed(KEY_ORIENTATION, LAST_BOARD_POSITION)
+            .boxed()
+            .map(i -> entry(i, list.get(i)))
+            .collect(Collectors.toUnmodifiableMap(Entry::getKey, Entry::getValue));
     }
 
     public Map<Integer, Integer> asMap() {
@@ -57,6 +76,7 @@ public class Board {
         validateNorthPlayerSelectedPitId(pitId, orientation);
         validateSouthPlayerSelectedPitId(pitId, orientation);
         validatePitHasStones(pitId, map);
+        validateTurnOfUser(map, orientation);
 
         Map<Integer, Integer> newMap = new HashMap<>(map);
         Integer currentStones = newMap.get(pitId);
@@ -75,10 +95,17 @@ public class Board {
         return new Board(newMap);
     }
 
+    private void validateTurnOfUser(Map<Integer, Integer> map, Orientation orientation) {
+        Orientation turn = Orientation.fromInt(map.get(KEY_ORIENTATION));
+        if (!turn.equals(orientation)) {
+            throw new GameException("It is turn of the " + turn + " player");
+        }
+    }
+
     private void validatePitHasStones(int pitId, Map<Integer, Integer> map) {
         Integer currentStones = map.get(pitId);
         if (currentStones <= 0) {
-            throw new GameException("Pit is empty:" + pitId);
+            throw new GameException("Pit is empty: " + pitId);
         }
     }
 

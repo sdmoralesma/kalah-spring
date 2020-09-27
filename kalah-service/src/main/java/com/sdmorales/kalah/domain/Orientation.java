@@ -13,6 +13,14 @@ public enum Orientation {
         };
     }
 
+    public static Orientation fromInt(int orientation) {
+        return switch (orientation) {
+            case 0 -> SOUTH;
+            case 1 -> NORTH;
+            default -> throw new IllegalArgumentException("Invalid orientation: " + orientation);
+        };
+    }
+
     public static Orientation fromString(String orientation) {
         Objects.requireNonNull(orientation);
         if (NORTH.toString().equalsIgnoreCase(orientation)) {
