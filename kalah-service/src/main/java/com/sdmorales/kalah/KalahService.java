@@ -2,6 +2,7 @@ package com.sdmorales.kalah;
 
 import com.sdmorales.kalah.domain.Board;
 import com.sdmorales.kalah.domain.Orientation;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,18 @@ public class KalahService {
         Orientation turn = Orientation.fromInt(board.asMap().get(Board.KEY_ORIENTATION));
         Board newBoard = board.move(pitId, turn);
         game.setBoard(newBoard.asJson());
+        return Optional.of(game);
+    }
+
+    @Transactional
+    public Optional<Game> updateGame(Long gameId, Map<Integer, Integer> boardAsMap) {
+        Optional<Game> optionalGame = kalahRepository.findById(gameId);
+        if (optionalGame.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Game game = optionalGame.get();
+        game.setBoard(new Board(boardAsMap).asJson());
         return Optional.of(game);
     }
 

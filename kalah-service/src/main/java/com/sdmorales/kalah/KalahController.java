@@ -1,12 +1,14 @@
 package com.sdmorales.kalah;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,6 +25,14 @@ public class KalahController {
     public ResponseEntity<Game> createGame() {
         Game persistedGame = kalahService.createGame();
         return ResponseEntity.created(buildUriFor(persistedGame)).body(persistedGame);
+    }
+
+    @PutMapping("/games/{gameId}")
+    public ResponseEntity<Game> modifyGameBoard(@PathVariable("gameId") Long gameId,
+        @RequestBody Map<Integer, Integer> boardAsMap) {
+        Optional<Game> byGameId = kalahService.updateGame(gameId, boardAsMap);
+        return byGameId.map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     private URI buildUriFor(Game persistedGame) {

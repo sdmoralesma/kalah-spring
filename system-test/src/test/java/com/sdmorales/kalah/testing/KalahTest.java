@@ -21,6 +21,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -58,30 +59,24 @@ class KalahTest {
     void verifyMakeMoveIsOk() {
         JsonPath game = GameFixtures.createGame();
         long gameId = game.getInt("id");
-        int pitId = 1;
 
-        put("/games/{gameId}/pits/{pitId}", gameId, pitId)
+        put("/games/{gameId}/pits/{pitId}", gameId, 1)
             .then()
             .statusCode(200)
             .contentType(ContentType.JSON)
-            .body("id", is(greaterThan(0)))
-            .body("userA", is(not(emptyOrNullString())))
-            .body("userB", is(not(emptyOrNullString())));
+            .body("id", is(greaterThan(0)));
     }
 
     @Test
     void verifyPlayerMoveOk() {
         JsonPath game = GameFixtures.createGame();
         long gameId = game.getInt("id");
-        int pitId = 1;
 
-        Response response = put("/games/{gameId}/pits/{pitId}", gameId, pitId)
+        Response response = put("/games/{gameId}/pits/{pitId}", gameId, 1)
             .then()
             .statusCode(200)
             .contentType(ContentType.JSON)
             .body("id", is(greaterThan(0)))
-            .body("userA", is(not(emptyOrNullString())))
-            .body("userB", is(not(emptyOrNullString())))
             .extract().response();
 
         Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
@@ -97,21 +92,36 @@ class KalahTest {
             .then()
             .statusCode(200)
             .contentType(ContentType.JSON)
-            .body("id", is(greaterThan(0)))
-            .body("userA", is(not(emptyOrNullString())))
-            .body("userB", is(not(emptyOrNullString())));
+            .body("id", is(greaterThan(0)));
 
         Response response = put("/games/{gameId}/pits/{pitId}", gameId, 2)
             .then()
             .statusCode(200)
             .contentType(ContentType.JSON)
             .body("id", is(greaterThan(0)))
-            .body("userA", is(not(emptyOrNullString())))
-            .body("userB", is(not(emptyOrNullString())))
             .extract().response();
 
         Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
         assertMapEquals(fromListToMap(List.of(1, 0, 0, 8, 8, 8, 8, 2, 7, 7, 6, 6, 6, 6, 0)), board);
+    }
+
+    @Test
+    void verifyBoardCanBeModifiedOk() {
+        JsonPath game = GameFixtures.createGame();
+        long gameId = game.getInt("id");
+
+        Map<String, Integer> newBoard = fromListToMap(List.of(1, 0, 0, 0, 0, 0, 1, 35, 0, 0, 0, 0, 0, 1, 35));
+
+        Response response = given()
+            .body(newBoard)
+            .contentType(ContentType.JSON)
+            .put("/games/{gameId}", gameId)
+            .then()
+            .statusCode(200)
+            .extract().response();
+
+        Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
+        assertMapEquals(fromListToMap(List.of(1, 0, 0, 0, 0, 0, 1, 35, 0, 0, 0, 0, 0, 1, 35)), board);
     }
 
     private static void assertMapEquals(Map<String, Integer> expected, Map<String, Integer> actual) {
