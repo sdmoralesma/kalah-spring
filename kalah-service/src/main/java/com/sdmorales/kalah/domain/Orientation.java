@@ -1,13 +1,21 @@
 package com.sdmorales.kalah.domain;
 
-import java.util.Objects;
-
 public enum Orientation {
-    NORTH,
-    SOUTH;
+    NORTH(1),
+    SOUTH(0);
 
-    public static Orientation flip(Orientation orientation) {
-        return switch (orientation) {
+    private final int value;
+
+    Orientation(int value) {
+        this.value = value;
+    }
+
+    public int asInt() {
+        return value;
+    }
+
+    public static Orientation flip(int orientation) {
+        return switch (Orientation.fromInt(orientation)) {
             case NORTH -> SOUTH;
             case SOUTH -> NORTH;
         };
@@ -21,14 +29,4 @@ public enum Orientation {
         };
     }
 
-    public static Orientation fromString(String orientation) {
-        Objects.requireNonNull(orientation);
-        if (NORTH.toString().equalsIgnoreCase(orientation)) {
-            return Orientation.NORTH;
-        } else if (SOUTH.toString().equalsIgnoreCase(orientation)) {
-            return Orientation.SOUTH;
-        } else {
-            throw new IllegalArgumentException("Invalid orientation: " + orientation);
-        }
-    }
 }

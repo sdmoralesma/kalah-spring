@@ -3,19 +3,23 @@ package com.sdmorales.kalah.testing;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.put;
 import static java.util.Map.entry;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -81,11 +85,11 @@ class KalahTest {
             .extract().response();
 
         Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
-        assertThat(board, equalTo(createExpectedBoardAfterValidMoveOnPitId1()));
+        assertMapEquals(fromListToMap(List.of(0, 0, 7, 7, 7, 7, 7, 1, 6, 6, 6, 6, 6, 6, 0)), board);
     }
 
     @Test
-    void verifyPlayerRepeatedMoveOk() {
+    void verifyPlayerCanRepeatTurnOk() {
         JsonPath game = GameFixtures.createGame();
         long gameId = game.getInt("id");
 
@@ -107,23 +111,18 @@ class KalahTest {
             .extract().response();
 
         Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
-        assertThat(board, equalTo(createExpectedBoardAfterValidMoveOnPitId1AndPitId2()));
+        assertMapEquals(fromListToMap(List.of(1, 0, 0, 8, 8, 8, 8, 2, 7, 7, 6, 6, 6, 6, 0)), board);
     }
 
-    private Map<String, Integer> createExpectedBoardAfterValidMoveOnPitId1() {
-        return Map
-            .ofEntries(entry("1", 0), entry("2", 7), entry("3", 7), entry("4", 7), entry("5", 7), entry("6", 7),
-                entry("7", 1),
-                entry("8", 6), entry("9", 6), entry("10", 6), entry("11", 6), entry("12", 6), entry("13", 6),
-                entry("14", 0));
+    private static void assertMapEquals(Map<String, Integer> expected, Map<String, Integer> actual) {
+        assertEquals(new TreeMap<>(expected), new TreeMap<>(actual));
     }
 
-    private Map<String, Integer> createExpectedBoardAfterValidMoveOnPitId1AndPitId2() {
-        return Map
-            .ofEntries(entry("1", 0), entry("2", 0), entry("3", 8), entry("4", 8), entry("5", 8), entry("6", 8),
-                entry("7", 8),
-                entry("8", 7), entry("9", 7), entry("10", 6), entry("11", 6), entry("12", 6), entry("13", 6),
-                entry("14", 0));
+    private Map<String, Integer> fromListToMap(List<Integer> list) {
+        return IntStream.rangeClosed(0, 14)
+            .boxed()
+            .map(i -> entry(i, list.get(i)))
+            .collect(Collectors.toUnmodifiableMap(entry -> entry.getKey().toString(), Entry::getValue));
     }
 
     @Nested
@@ -151,4 +150,5 @@ class KalahTest {
                 .statusCode(400);
         }
     }
+
 }

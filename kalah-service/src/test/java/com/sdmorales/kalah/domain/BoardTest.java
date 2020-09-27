@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.TreeMap;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class BoardTest {
@@ -29,7 +28,7 @@ class BoardTest {
     void moveOneStoneOnPit3ForSouthPlayerOk() {
         Board result = board.move(3, Orientation.SOUTH);
 
-        assertBoardEquals(new Board(0, 6, 6, 0, 7, 7, 7, 1, 7, 7, 6, 6, 6, 6, 0), result);
+        assertBoardEquals(new Board(1, 6, 6, 0, 7, 7, 7, 1, 7, 7, 6, 6, 6, 6, 0), result);
     }
 
     @Test
@@ -43,7 +42,7 @@ class BoardTest {
     void moveOneStoneOnPit10ForNorthPlayerOk() {
         Board result = new Board(1, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0).move(10, Orientation.NORTH);
 
-        assertBoardEquals(new Board(1, 7, 7, 6, 6, 6, 6, 0, 6, 6, 0, 7, 7, 7, 1), result);
+        assertBoardEquals(new Board(0, 7, 7, 6, 6, 6, 6, 0, 6, 6, 0, 7, 7, 7, 1), result);
     }
 
     @Test
@@ -91,13 +90,12 @@ class BoardTest {
     }
 
     @Test
-    @Disabled
-    void verifyLastStoneInKalahAllowsNewTurnForSouthPlayer() {
+    void verifyLastStoneInKalahAllowsOneMoreTurnForSouthPlayer() {
         Board firstResult = board.move(1, Orientation.SOUTH);
         assertBoardEquals(new Board(0, 0, 7, 7, 7, 7, 7, 1, 6, 6, 6, 6, 6, 6, 0), firstResult);
 
-        Board secondResult = board.move(1, Orientation.SOUTH);
-        assertBoardEquals(new Board(0, 0, 0, 8, 8, 8, 8, 8, 7, 7, 6, 6, 6, 6, 0), secondResult);
+        Board secondResult = firstResult.move(2, Orientation.SOUTH);
+        assertBoardEquals(new Board(1, 0, 0, 8, 8, 8, 8, 2, 7, 7, 6, 6, 6, 6, 0), secondResult);
     }
 
     private static void assertBoardEquals(Board expected, Board actual) {

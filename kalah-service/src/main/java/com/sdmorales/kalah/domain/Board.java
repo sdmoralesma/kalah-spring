@@ -19,6 +19,10 @@ public class Board {
 
     private static final int FIRST_BOARD_POSITION = 1;
     private static final int LAST_BOARD_POSITION = 14;
+    private static final int KALAH_NORTH_PLAYER = LAST_BOARD_POSITION;
+    private static final int KALAH_SOUTH_PLAYER = 7;
+
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static final int KEY_ORIENTATION = 0;
     public static final int REQUIRED_VALUES_FOR_BOARD = 15;
@@ -26,7 +30,7 @@ public class Board {
     private final Map<Integer, Integer> map;
 
     public Board() {
-        this.map = new Board(0, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0).asMap();
+        this.map = new Board(Orientation.SOUTH.asInt(), 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0).asMap();
     }
 
     public Board(Map<Integer, Integer> map) {
@@ -90,6 +94,17 @@ public class Board {
             Integer value = newMap.get(pitId) + 1;
             newMap.put(pitId, value);
             currentStones--;
+
+            if (currentStones == 0) {
+                if (pitId == KALAH_NORTH_PLAYER) {
+                    newMap.put(KEY_ORIENTATION, Orientation.NORTH.asInt());
+                } else if (pitId == KALAH_SOUTH_PLAYER) {
+                    newMap.put(KEY_ORIENTATION, Orientation.SOUTH.asInt());
+                } else {
+                    Integer currentOrientation = map.get(KEY_ORIENTATION);
+                    newMap.put(KEY_ORIENTATION, Orientation.flip(currentOrientation).asInt());
+                }
+            }
         }
 
         return new Board(newMap);

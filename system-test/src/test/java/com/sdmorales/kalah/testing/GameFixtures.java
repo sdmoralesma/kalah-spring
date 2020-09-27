@@ -27,7 +27,6 @@ public class GameFixtures {
             .body("id", is(greaterThan(0)))
             .body("userA", is(not(emptyOrNullString())))
             .body("userB", is(not(emptyOrNullString())))
-            .body("turn", is(not(emptyOrNullString())))
             .extract().response().jsonPath();
     }
 

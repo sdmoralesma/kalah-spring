@@ -20,8 +20,7 @@ public class KalahService {
     public Game createGame() {
         UUID userAId = UUID.randomUUID();
         UUID userBId = UUID.randomUUID();
-        String turn = Orientation.SOUTH.toString();// Could be randomized
-        Game gameToSave = new Game(userAId.toString(), userBId.toString(), new Board().asJson(), turn);
+        Game gameToSave = new Game(userAId.toString(), userBId.toString(), new Board().asJson());
         return kalahRepository.save(gameToSave);
     }
 
@@ -34,10 +33,9 @@ public class KalahService {
 
         Game game = optionalGame.get();
         Board board = Board.fromJson(game.getBoard());
-        Orientation turn = Orientation.fromString(game.getTurn());
+        Orientation turn = Orientation.fromInt(board.asMap().get(Board.KEY_ORIENTATION));
         Board newBoard = board.move(pitId, turn);
         game.setBoard(newBoard.asJson());
-//        game.setTurn(Orientation.flip(turn).toString());//TODO: delete TURN from DB
         return Optional.of(game);
     }
 
