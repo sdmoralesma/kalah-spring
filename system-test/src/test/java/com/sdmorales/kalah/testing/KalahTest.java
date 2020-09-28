@@ -21,7 +21,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -122,6 +121,55 @@ class KalahTest {
 
         Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
         assertMapEquals(fromListToMap(List.of(1, 0, 0, 0, 0, 0, 1, 35, 0, 0, 0, 0, 0, 1, 35)), board);
+    }
+
+
+    @Test
+    void verifyNorthPlayerWins() {
+        JsonPath game = GameFixtures.createGame();
+        long gameId = game.getInt("id");
+
+        Map<String, Integer> newBoard = fromListToMap(List.of(1, 0, 0, 0, 0, 0, 1, 25, 0, 0, 0, 0, 0, 1, 35));
+
+        given()
+            .body(newBoard)
+            .contentType(ContentType.JSON)
+            .put("/games/{gameId}", gameId)
+            .then()
+            .statusCode(200);
+
+        Response response = put("/games/{gameId}/pits/{pitId}", gameId, 13)
+            .then()
+            .statusCode(200)
+            .contentType(ContentType.JSON)
+            .extract().response();
+
+        Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
+        assertMapEquals(fromListToMap(List.of(1, 0, 0, 0, 0, 0, 0, 26, 0, 0, 0, 0, 0, 0, 36)), board);
+    }
+
+    @Test
+    void verifySouthPlayerWins() {
+        JsonPath game = GameFixtures.createGame();
+        long gameId = game.getInt("id");
+
+        Map<String, Integer> newBoard = fromListToMap(List.of(0, 0, 0, 0, 0, 0, 1, 35, 0, 0, 0, 0, 0, 1, 25));
+
+        given()
+            .body(newBoard)
+            .contentType(ContentType.JSON)
+            .put("/games/{gameId}", gameId)
+            .then()
+            .statusCode(200);
+
+        Response response = put("/games/{gameId}/pits/{pitId}", gameId, 6)
+            .then()
+            .statusCode(200)
+            .contentType(ContentType.JSON)
+            .extract().response();
+
+        Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
+        assertMapEquals(fromListToMap(List.of(0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 26)), board);
     }
 
     private static void assertMapEquals(Map<String, Integer> expected, Map<String, Integer> actual) {
