@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.StringJoiner;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -59,15 +61,8 @@ public class Board {
             throw new IllegalStateException("Game has not finished");
         }
 
-        int northPlayerTotalStones = map.entrySet().stream()
-            .filter(e -> e.getKey() >= 8 && e.getKey() <= 14)
-            .mapToInt(Entry::getValue)
-            .sum();
-
-        int southPlayerTotalStones = map.entrySet().stream()
-            .filter(e -> e.getKey() >= 1 && e.getKey() <= 7)
-            .mapToInt(Entry::getValue)
-            .sum();
+        int northPlayerTotalStones = map.get(KALAH_NORTH_PLAYER);
+        int southPlayerTotalStones = map.get(KALAH_SOUTH_PLAYER);
 
         if (northPlayerTotalStones > southPlayerTotalStones) {
             return Orientation.NORTH;
@@ -141,7 +136,26 @@ public class Board {
             }
         }
 
-        return new Board(newMap);
+        return calculateEndGame(newMap);
+    }
+
+    private Board calculateEndGame(Map<Integer, Integer> aMap) {
+        if (new Board(aMap).getStatus() == Status.FINISHED) {
+            int northPlayerTotalStones = aMap.entrySet().stream()
+                .filter(e -> e.getKey() >= 8 && e.getKey() <= 14)
+                .mapToInt(Entry::getValue)
+                .sum();
+
+            int southPlayerTotalStones = aMap.entrySet().stream()
+                .filter(e -> e.getKey() >= 1 && e.getKey() <= 7)
+                .mapToInt(Entry::getValue)
+                .sum();
+
+            return new Board(aMap.get(KEY_ORIENTATION), 0, 0, 0, 0, 0, 0, southPlayerTotalStones,
+                0, 0, 0, 0, 0, 0, northPlayerTotalStones);
+        }
+
+        return new Board(aMap);
     }
 
     private void validateGameStatusInProgress() {
@@ -193,5 +207,10 @@ public class Board {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Board.class.getSimpleName() + "[", "]")
+            .add("map=" + new TreeMap<>(map))
+            .toString();
+    }
 }
