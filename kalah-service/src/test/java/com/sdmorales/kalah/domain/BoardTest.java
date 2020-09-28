@@ -142,6 +142,13 @@ class BoardTest {
         assertEquals("Game has finished", exception.getMessage());
     }
 
+    @Test
+    void verifyLastStoneInEmptyPitOppositeStonesAreCollectedInKalah() {
+        Board result = new Board(0, 1, 0, 0, 0, 0, 1, 10, 0, 1, 0, 0, 4, 0, 10).move(1);
+
+        assertBoardEquals(new Board(1, 0, 0, 0, 0, 0, 1, 15, 0, 1, 0, 0, 0, 0, 10), result);
+    }
+
     private static void assertBoardEquals(Board expected, Board actual) {
         assertEquals(new TreeMap<>(expected.asMap()), new TreeMap<>(actual.asMap()));
     }

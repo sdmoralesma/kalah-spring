@@ -1,6 +1,6 @@
 package com.sdmorales.kalah.domain;
 
-public enum Orientation {
+public enum Orientation { //todo: maybe Player with orientation and Kalah defined here?
     NORTH(1),
     SOUTH(0),
     NONE(-1);
@@ -15,8 +15,8 @@ public enum Orientation {
         return value;
     }
 
-    public static Orientation flip(int orientation) {
-        return switch (Orientation.fromInt(orientation)) {
+    public static Orientation flip(Orientation orientation) {
+        return switch (orientation) {
             case NORTH -> SOUTH;
             case SOUTH -> NORTH;
             case NONE -> throw new IllegalStateException("Can not flip orientation: " + NONE);
