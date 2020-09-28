@@ -1,7 +1,6 @@
 package com.sdmorales.kalah;
 
 import com.sdmorales.kalah.domain.Board;
-import com.sdmorales.kalah.domain.Orientation;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,8 +33,7 @@ public class KalahService {
 
         Game game = optionalGame.get();
         Board board = Board.fromJson(game.getBoard());
-        Orientation turn = Orientation.fromInt(board.asMap().get(Board.KEY_ORIENTATION));
-        Board newBoard = board.move(pitId, turn);
+        Board newBoard = board.move(pitId);
         game.setBoard(newBoard.asJson());
         return Optional.of(game);
     }

@@ -11,21 +11,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Board {
 
+    public static final int KEY_ORIENTATION = 0;
+
     private static final int FIRST_BOARD_POSITION = 1;
     private static final int LAST_BOARD_POSITION = 14;
     private static final int KALAH_NORTH_PLAYER = LAST_BOARD_POSITION;
     private static final int KALAH_SOUTH_PLAYER = 7;
-
-
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    public static final int KEY_ORIENTATION = 0;
-    public static final int REQUIRED_VALUES_FOR_BOARD = 15;
+    private static final int REQUIRED_VALUES_FOR_BOARD = 15;
 
     private final Map<Integer, Integer> map;
 
@@ -42,6 +40,42 @@ public class Board {
             throw new IllegalArgumentException("Requires " + REQUIRED_VALUES_FOR_BOARD + " values to create a board");
         }
         this.map = fromListToMap(Arrays.asList(values));
+    }
+
+    public Orientation getOrientation() {
+        return Orientation.fromInt(map.get(Board.KEY_ORIENTATION));
+    }
+
+    public Status getStatus() {
+        if (northPlayerHaveStones(map) && southPlayerHaveStones(map)) {
+            return Status.IN_PROGRESS;
+        } else {
+            return Status.FINISHED;
+        }
+    }
+
+    public Orientation getWinner() {
+        if (getStatus() != Status.FINISHED) {
+            throw new IllegalStateException("Game has not finished");
+        }
+
+        int northPlayerTotalStones = map.entrySet().stream()
+            .filter(e -> e.getKey() >= 8 && e.getKey() <= 14)
+            .mapToInt(Entry::getValue)
+            .sum();
+
+        int southPlayerTotalStones = map.entrySet().stream()
+            .filter(e -> e.getKey() >= 1 && e.getKey() <= 7)
+            .mapToInt(Entry::getValue)
+            .sum();
+
+        if (northPlayerTotalStones > southPlayerTotalStones) {
+            return Orientation.NORTH;
+        } else if (northPlayerTotalStones < southPlayerTotalStones) {
+            return Orientation.SOUTH;
+        } else {
+            return Orientation.NONE;
+        }
     }
 
     private Map<Integer, Integer> fromListToMap(List<Integer> list) {
@@ -73,14 +107,14 @@ public class Board {
         }
     }
 
-    public Board move(int pitId, Orientation orientation) {
-        Objects.requireNonNull(orientation);
-        validateIfBoardContainsThePitId(pitId, map);
+    public Board move(int pitId) {
+        Orientation orientation = getOrientation();
+        validateGameStatusInProgress();
+        validateIfBoardContainsThePitId(pitId);
         validateIfPitIdIsNotAKalah(pitId);
         validateNorthPlayerSelectedPitId(pitId, orientation);
         validateSouthPlayerSelectedPitId(pitId, orientation);
-        validatePitHasStones(pitId, map);
-        validateTurnOfUser(map, orientation);
+        validatePitHasStones(pitId);
 
         Map<Integer, Integer> newMap = new HashMap<>(map);
         Integer currentStones = newMap.get(pitId);
@@ -110,14 +144,25 @@ public class Board {
         return new Board(newMap);
     }
 
-    private void validateTurnOfUser(Map<Integer, Integer> map, Orientation orientation) {
-        Orientation turn = Orientation.fromInt(map.get(KEY_ORIENTATION));
-        if (!turn.equals(orientation)) {
-            throw new GameException("It is turn of the " + turn + " player");
+    private void validateGameStatusInProgress() {
+        if (getStatus() == Status.FINISHED) {
+            throw new GameException("Game has finished");
         }
     }
 
-    private void validatePitHasStones(int pitId, Map<Integer, Integer> map) {
+    private boolean northPlayerHaveStones(Map<Integer, Integer> map) {
+        return map.entrySet().stream()
+            .filter(e -> e.getKey() >= 8 && e.getKey() <= 13)
+            .anyMatch(e -> e.getValue() >= 1);
+    }
+
+    private boolean southPlayerHaveStones(Map<Integer, Integer> map) {
+        return map.entrySet().stream()
+            .filter(e -> e.getKey() >= 1 && e.getKey() <= 6)
+            .anyMatch(e -> e.getValue() >= 1);
+    }
+
+    private void validatePitHasStones(int pitId) {
         Integer currentStones = map.get(pitId);
         if (currentStones <= 0) {
             throw new GameException("Pit is empty: " + pitId);
@@ -136,8 +181,8 @@ public class Board {
         }
     }
 
-    private void validateIfBoardContainsThePitId(int pitId, Map<Integer, Integer> newMap) {
-        if (!newMap.containsKey(pitId)) {
+    private void validateIfBoardContainsThePitId(int pitId) {
+        if (!map.containsKey(pitId)) {
             throw new GameException("Pit id not valid: " + pitId);
         }
     }

@@ -2,7 +2,8 @@ package com.sdmorales.kalah.domain;
 
 public enum Orientation {
     NORTH(1),
-    SOUTH(0);
+    SOUTH(0),
+    NONE(-1);
 
     private final int value;
 
@@ -18,6 +19,7 @@ public enum Orientation {
         return switch (Orientation.fromInt(orientation)) {
             case NORTH -> SOUTH;
             case SOUTH -> NORTH;
+            case NONE -> throw new IllegalStateException("Can not flip orientation: " + NONE);
         };
     }
 
