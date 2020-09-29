@@ -22,15 +22,13 @@ public class Board {
 
     private static final int FIRST_BOARD_POSITION = 1;
     private static final int LAST_BOARD_POSITION = 14;
-    private static final int KALAH_NORTH_PLAYER = LAST_BOARD_POSITION;
-    private static final int KALAH_SOUTH_PLAYER = 7;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final int REQUIRED_VALUES_FOR_BOARD = 15;
 
     private final Map<Integer, Integer> map;
 
     public Board() {
-        this.map = new Board(Orientation.SOUTH.asInt(), 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0).asMap();
+        this.map = new Board(Side.SOUTH.asInt(), 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0).asMap();
     }
 
     public Board(Map<Integer, Integer> map) {
@@ -47,8 +45,8 @@ public class Board {
         this.map = fromListToMap(Arrays.asList(values));
     }
 
-    public Orientation getOrientation() {
-        return Orientation.fromInt(map.get(Board.KEY_ORIENTATION));
+    public Side getOrientation() {
+        return Side.fromInt(map.get(Board.KEY_ORIENTATION));
     }
 
     public Status getStatus() {
@@ -59,20 +57,20 @@ public class Board {
         }
     }
 
-    public Orientation getWinner() {
+    public Side getWinner() {
         if (getStatus() != Status.FINISHED) {
             throw new IllegalStateException("Game has not finished");
         }
 
-        int northPlayerTotalStones = map.get(KALAH_NORTH_PLAYER);
-        int southPlayerTotalStones = map.get(KALAH_SOUTH_PLAYER);
+        int northPlayerTotalStones = map.get(Side.NORTH.getKalah());
+        int southPlayerTotalStones = map.get(Side.SOUTH.getKalah());
 
         if (northPlayerTotalStones > southPlayerTotalStones) {
-            return Orientation.NORTH;
+            return Side.NORTH;
         } else if (northPlayerTotalStones < southPlayerTotalStones) {
-            return Orientation.SOUTH;
+            return Side.SOUTH;
         } else {
-            return Orientation.NONE;
+            return Side.NONE;
         }
     }
 
@@ -106,12 +104,11 @@ public class Board {
     }
 
     public Board move(int pitId) {
-        Orientation orientation = getOrientation();
+        Side side = getOrientation();
         validateGameStatusInProgress();
         validateIfBoardContainsThePitId(pitId);
         validateThatPitIdIsNotAKalah(pitId);
-        validateNorthPlayerSelectedPitId(pitId, orientation);
-        validateSouthPlayerSelectedValidPitId(pitId, orientation);
+        validateOrientationAndSelectedPitId(pitId, side);
         validatePitHasStones(pitId);
 
         Map<Integer, Integer> newMap = new HashMap<>(map);
@@ -128,23 +125,23 @@ public class Board {
             currentStones--;
 
             if (currentStones == 0) {
-                if (pitId == KALAH_NORTH_PLAYER) {
-                    newMap.put(KEY_ORIENTATION, Orientation.NORTH.asInt());
-                } else if (pitId == KALAH_SOUTH_PLAYER) {
-                    newMap.put(KEY_ORIENTATION, Orientation.SOUTH.asInt());
+                if (pitId == Side.NORTH.getKalah()) {
+                    newMap.put(KEY_ORIENTATION, Side.NORTH.asInt());
+                } else if (pitId == Side.SOUTH.getKalah()) {
+                    newMap.put(KEY_ORIENTATION, Side.SOUTH.asInt());
                 } else {
-                    Orientation currentOrientation = Orientation.fromInt(map.get(KEY_ORIENTATION));
+                    Side currentSide = Side.fromInt(map.get(KEY_ORIENTATION));
                     if (newValue == 1 && numberOfStonesInOppositePit(pitId, newMap) > 0) {
                         int stonesToCollect = newMap.get(determineOppositePitId(pitId));
                         newMap.put(pitId, 0);
                         newMap.put(determineOppositePitId(pitId), 0);
-                        if (currentOrientation == Orientation.NORTH) {
-                            newMap.computeIfPresent(KALAH_NORTH_PLAYER, (k, v) -> v + stonesToCollect + 1);
-                        } else if (currentOrientation == Orientation.SOUTH) {
-                            newMap.computeIfPresent(KALAH_SOUTH_PLAYER, (k, v) -> v + stonesToCollect + 1);
+                        if (currentSide == Side.NORTH) {
+                            newMap.computeIfPresent(Side.NORTH.getKalah(), (k, v) -> v + stonesToCollect + 1);
+                        } else if (currentSide == Side.SOUTH) {
+                            newMap.computeIfPresent(Side.SOUTH.getKalah(), (k, v) -> v + stonesToCollect + 1);
                         }
                     }
-                    newMap.put(KEY_ORIENTATION, Orientation.flip(currentOrientation).asInt());
+                    newMap.put(KEY_ORIENTATION, Side.flip(currentSide).asInt());
                 }
             }
         }
@@ -187,43 +184,37 @@ public class Board {
 
     private boolean northPlayerHaveStones(Map<Integer, Integer> map) {
         return map.entrySet().stream()
-            .filter(e -> e.getKey() >= 8 && e.getKey() <= 13)
+            .filter(e -> Side.NORTH.isValidValue(e.getKey()))
             .anyMatch(e -> e.getValue() >= 1);
     }
 
     private boolean southPlayerHaveStones(Map<Integer, Integer> map) {
         return map.entrySet().stream()
-            .filter(e -> e.getKey() >= 1 && e.getKey() <= 6)
+            .filter(e -> Side.SOUTH.isValidValue(e.getKey()))
             .anyMatch(e -> e.getValue() >= 1);
     }
 
     private void validatePitHasStones(int pitId) {
         Integer currentStones = map.get(pitId);
         if (currentStones <= 0) {
-            throw new GameException("Pit is empty: " + pitId);
+            throw new GameException("Pit id is empty: " + pitId);
         }
     }
 
-    private void validateSouthPlayerSelectedValidPitId(int pitId, Orientation orientation) {
-        if (pitId >= KALAH_SOUTH_PLAYER && orientation == Orientation.SOUTH) {
-            throw new GameException("South player can only select pitId between 1 and 6");
-        }
-    }
-
-    private void validateNorthPlayerSelectedPitId(int pitId, Orientation orientation) {
-        if (pitId <= 6 && orientation == Orientation.NORTH) {
-            throw new GameException("North player can only select pitId between 8 and 13");
+    private void validateOrientationAndSelectedPitId(int pitId, Side side) {
+        if (!side.isValidValue(pitId)) {
+            throw new GameException(side.toString() + " player can not select pit id: " + pitId);
         }
     }
 
     private void validateIfBoardContainsThePitId(int pitId) {
         if (!map.containsKey(pitId)) {
-            throw new GameException("Pit id not valid: " + pitId);
+            throw new GameException("Pit id is not valid: " + pitId);
         }
     }
 
     private void validateThatPitIdIsNotAKalah(int pitId) {
-        if (pitId == KALAH_SOUTH_PLAYER || pitId == KALAH_NORTH_PLAYER) {
+        if (pitId == Side.SOUTH.getKalah() || pitId == Side.NORTH.getKalah()) {
             throw new GameException("Can not select a Kalah, choose a pit: 1-6 or 8-13");
         }
     }

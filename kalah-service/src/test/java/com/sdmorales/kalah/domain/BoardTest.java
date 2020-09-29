@@ -49,7 +49,7 @@ class BoardTest {
         GameException exception = assertThrows(GameException.class,
             () -> new Board(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0).move(1));
 
-        assertEquals("Pit is empty: 1", exception.getMessage());
+        assertEquals("Pit id is empty: 1", exception.getMessage());
     }
 
     @Test
@@ -57,14 +57,14 @@ class BoardTest {
         GameException exception = assertThrows(GameException.class,
             () -> new Board(1, 0, 7, 7, 7, 7, 7, 1, 6, 6, 6, 6, 6, 6, 0).move(1));
 
-        assertEquals("North player can only select pitId between 8 and 13", exception.getMessage());
+        assertEquals("NORTH player can not select pit id: 1", exception.getMessage());
     }
 
     @Test
     void verifySouthPlayerCanNotMoveNorthPits() {
         GameException exception = assertThrows(GameException.class, () -> board.move(10));
 
-        assertEquals("South player can only select pitId between 1 and 6", exception.getMessage());
+        assertEquals("SOUTH player can not select pit id: 10", exception.getMessage());
     }
 
     @Test
@@ -78,7 +78,7 @@ class BoardTest {
     void verifySouthPlayerCanNotMoveOnInvalidPitId() {
         GameException exception = assertThrows(GameException.class, () -> board.move(100));
 
-        assertEquals("Pit id not valid: 100", exception.getMessage());
+        assertEquals("Pit id is not valid: 100", exception.getMessage());
     }
 
     @Test
@@ -95,28 +95,28 @@ class BoardTest {
         Board result = new Board(0, 0, 0, 0, 0, 0, 1, 10, 0, 0, 0, 0, 2, 3, 10).move(6);
 
         assertBoardEquals(new Board(0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 15), result);
-        assertEquals(Orientation.NORTH, result.getWinner());
+        assertEquals(Side.NORTH, result.getWinner());
     }
 
     @Test
     void verifyNorthPlayerWins() {
         Board result = new Board(1, 0, 0, 0, 0, 0, 1, 35, 0, 0, 0, 0, 0, 0, 36);
 
-        assertEquals(Orientation.NORTH, result.getWinner());// todo: fix me
+        assertEquals(Side.NORTH, result.getWinner());// todo: fix me
     }
 
     @Test
     void verifySouthPlayerWins() {
         Board result = new Board(0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 1, 35);
 
-        assertEquals(Orientation.SOUTH, result.getWinner());// todo: fix me
+        assertEquals(Side.SOUTH, result.getWinner());// todo: fix me
     }
 
     @Test
     void verifyDraw() {
         Board result = new Board(0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 36);
 
-        assertEquals(Orientation.NONE, result.getWinner());
+        assertEquals(Side.NONE, result.getWinner());
     }
 
     @Test
