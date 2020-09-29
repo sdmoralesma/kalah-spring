@@ -24,7 +24,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class KalahTest {
+class KalahIT {
 
     @BeforeAll
     public static void setup() {

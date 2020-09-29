@@ -1,7 +1,7 @@
 # Kalah-Spring
 
-Kalah game using Spring framework
+Kalah game using the Spring framework
 
-### Online Games
+### Examples Games
 
-https://www.mathplayground.com/mancala.html
+1. https://www.mathplayground.com/mancala.html

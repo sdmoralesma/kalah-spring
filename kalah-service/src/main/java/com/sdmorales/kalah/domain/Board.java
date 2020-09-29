@@ -107,7 +107,7 @@ public class Board {
         Side side = getOrientation();
         validateGameStatusInProgress();
         validateIfBoardContainsThePitId(pitId);
-        validateThatPitIdIsNotAKalah(pitId);
+        validateThatPitIdIsNotKalah(pitId);
         validateOrientationAndSelectedPitId(pitId, side);
         validatePitHasStones(pitId);
 
@@ -213,7 +213,7 @@ public class Board {
         }
     }
 
-    private void validateThatPitIdIsNotAKalah(int pitId) {
+    private void validateThatPitIdIsNotKalah(int pitId) {
         if (pitId == Side.SOUTH.getKalah() || pitId == Side.NORTH.getKalah()) {
             throw new GameException("Can not select a Kalah, choose a pit: 1-6 or 8-13");
         }
