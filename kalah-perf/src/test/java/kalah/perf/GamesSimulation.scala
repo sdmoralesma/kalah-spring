@@ -16,7 +16,7 @@ class GamesSimulation extends Simulation {
   val create = scenario("games-crud").exec(karateFeature("classpath:kalah/perf/games.feature"))
 
   setUp(
-    create.inject(rampUsers(1000) during (10 seconds)).protocols(protocol)
+    create.inject(rampUsers(5500) during (10 seconds)).protocols(protocol)
   )
 
 }

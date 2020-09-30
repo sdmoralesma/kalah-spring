@@ -2,6 +2,10 @@
 
 Kalah game using the Spring framework
 
-### Examples Games
+### Requirements
+
+* Java 14
+
+### Examples
 
 1. https://www.mathplayground.com/mancala.html

@@ -15,5 +15,9 @@ Switch to the "-st" module and perform:
 # Performance Test
 
 Switch to the "-perf" module and perform:
-
+   
+    mvn clean test-compile gatling:test
+    
+To runt the scenarios first and then the performance test use:
+        
     mvn clean test    

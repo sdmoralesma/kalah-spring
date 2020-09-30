@@ -9,7 +9,7 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
-        <java.version>8</java.version>
+        <java.version>14</java.version>
         <karate.version>0.9.6</karate.version>
     </properties>
 
@@ -63,7 +63,7 @@
             <plugin>
                 <groupId>io.gatling</groupId>
                 <artifactId>gatling-maven-plugin</artifactId>
-                <version>3.0.5</version>
+                <version>3.1.0</version>
                 <configuration>
                     <simulationsFolder>src/test/java</simulationsFolder>
                     <includes>
