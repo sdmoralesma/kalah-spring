@@ -13,6 +13,7 @@
     <modules>
         <module>kalah-service</module>
         <module>kalah-st</module>
+        <module>kalah-perf</module>
     </modules>
 
     <properties>

@@ -1,0 +1,10 @@
+{
+  "simulation": "kalah.perf.GamesSimulation",
+  "simulationId": "gamessimulation",
+  "start": 1601478031699,
+  "description": "",
+  "scenarios": ["games-crud"],
+  "assertions": [
+
+  ]
+}
