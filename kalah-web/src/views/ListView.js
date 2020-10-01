@@ -1,4 +1,5 @@
 import Stocks from "./Stocks.js";
+import {html, render} from "./../lit-html/lit-html.js";
 
 export default class ListView extends HTMLElement {
 
@@ -13,7 +14,7 @@ export default class ListView extends HTMLElement {
   }
 
   render() {
-    this.root.innerHTML = `
+    const template = html`
       <style>
         header {
         background: var(--air-brown, red);
@@ -22,34 +23,23 @@ export default class ListView extends HTMLElement {
       <header>
       <h2>the stocks</h2>
       </header>
-      ${this.table()}      
-    `;
-    this.root.querySelectorAll('button').forEach(button => button.onclick = e => this.removeStock(e));
-  }
-
-  table() {
-    return `
       <table>
-      <thead>      
+      <thead>
         <tr>
           <th>name</th><th>price</th><th>amount</th><th>total</th>
         </tr>
       </thead>
       <tbody>
-      ${this.content()}
+      ${Stocks.all().map(stock => this.row(stock))}
       </tbody>
       </table>
     `;
-  }
-
-  content() {
-    return Stocks.all()
-    .map(stock => this.row(stock))
-    .reduce((previous, current) => previous + current);
+    render(template, this.root);
+    this.root.querySelectorAll('button').forEach(button => button.onclick = e => this.removeStock(e));
   }
 
   row({name, price, amount, total}) {
-    return `
+    return html`
       <tr>
       <td>${name}</td><td>${price}</td><td>${amount}</td><td>${total}</td><td><button id="${name}">remove</button></td>
       </tr>
