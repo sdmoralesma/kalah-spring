@@ -1,17 +1,15 @@
+import AddView from "./views/AddView.js";
+import ListView from "./views/ListView.js";
+import Overview from "./views/Overview.js";
+import AboutView from "./views/AboutView.js";
+
 export default class AirSlot extends HTMLElement {
 
   constructor() {
     super();
     this.oldChild = null;
     this.currentView = null;
-    this.loadConfiguration();
     this.root = this.attachShadow({mode: 'open'});
-  }
-
-  async loadConfiguration() {
-    const response = await fetch('configuration.json');
-    this.configuration = await response.json();
-    document.addEventListener('air-nav', e => this.onNavigation(e));
   }
 
   connectedCallback() {
@@ -20,6 +18,7 @@ export default class AirSlot extends HTMLElement {
       <slot name="view">VIEW</slot>
       <slot name="footer">FOOTER</slot>
     `;
+    document.addEventListener('air-nav', e => this.onNavigation(e));
     this.oldChild = this.root.querySelector("[name=view]");
   }
 
@@ -27,32 +26,34 @@ export default class AirSlot extends HTMLElement {
     const {detail} = evt;
     const {hash: linkName} = detail;
     this.currentView = linkName;
-    let file = `${linkName}View.js`;
-    const viewConfiguration = this.configuration[linkName];
-    if (viewConfiguration) {
-      file = viewConfiguration.file;
-    }
-
-    this.loadView(file);
+    this.loadView(linkName);
   }
 
   async loadView(linkName) {
-    const {default: View} = await import(`./views/${linkName}`);
-
     let newChild;
-    if (View.prototype instanceof HTMLElement) {
-      newChild = new View();
-
-      if (this.oldChild) {
-        this.root.replaceChild(newChild, this.oldChild);
-      } else {
-        this.root.appendChild(newChild);
-      }
-
-    } else {
-      this.root.innerHTML = View;
-      newChild = this.root.querySelector('article');
+    switch (linkName) {
+      case 'About':
+        newChild = new AboutView();
+        break;
+      case 'Add':
+        newChild = new AddView();
+        break;
+      case 'List':
+        newChild = new ListView();
+        break;
+      case 'Overview':
+        newChild = new Overview();
+        break;
+      default:
+        throw new Error(`Unknown route: ${linkName}`);
     }
+
+    if (this.oldChild) {
+      this.root.replaceChild(newChild, this.oldChild);
+    } else {
+      this.root.appendChild(newChild);
+    }
+
     this.oldChild = newChild;
   }
 
