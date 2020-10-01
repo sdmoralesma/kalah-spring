@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Kalah</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body>
+  <main>
+    <header>
+      <h2>Kalah</h2>
+      <air-crumb>...</air-crumb>
+    </header>
+    <nav>
+       <air-nav activeLinkClass="a-link">
+         <a href="#Overview">overview</a>
+         <a href="#Add">add stock</a>
+         <a href="#List">list stocks</a>
+         <a href="#About">about</a>
+       </air-nav>
+    </nav>
+    <article>
+      <air-slot>
+        <header slot="header">before</header>
+        <section slot="view">view is loaded here</section>
+        <footer slot="footer">after</footer>
+      </air-slot>
+    </article>
+    <footer><small>copyright sergio morales 2020</small></footer>
+  </main>
+  <script src="app.js" type="module"></script>
+</body>
+</html>
