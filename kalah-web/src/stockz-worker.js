@@ -1,8 +1,8 @@
 const cacheName = 'stockz-cache';
 const views = ['AboutView', 'AddView', 'AirElement', 'ListView', 'Overview',
-  'Stocks', 'TotalView'].map(view => `views/${view}.js`);
+  'Stocks', 'TotalView', 'AirElement-36f8515f'].map(view => `views/${view}.js`);
 const resources = ['index.html', 'style.css', 'configuration.json',
-  'app.js'].concat(views);
+  'app.js', 'd3/d3.js'].concat(views);
 
 self.addEventListener('install', event =>
     event.waitUntil(
