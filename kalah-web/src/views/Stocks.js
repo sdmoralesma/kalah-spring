@@ -53,7 +53,7 @@ export default class Stocks {
   static total() {
     return Stocks.all()
     .map(stock => Stocks.priceTotal(stock))
-    .reduce((p, c) => p + c);
+    .reduce((p, c) => p + c, 0);
   }
 
 }
