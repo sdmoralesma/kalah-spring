@@ -7,6 +7,11 @@ export default class ListView extends HTMLElement {
   }
 
   connectedCallback(){
+    addEventListener('air-stocks', _ => this.render());
+    return this.render();
+  }
+
+  render() {
     this.innerHTML = `
       <style>
         header {
@@ -17,7 +22,7 @@ export default class ListView extends HTMLElement {
       <h2>the stocks</h2>
       </header>
       ${this.table()}
-    `
+    `;
   }
 
   table() {

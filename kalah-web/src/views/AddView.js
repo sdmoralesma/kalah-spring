@@ -1,4 +1,5 @@
 import Stocks from "./Stocks.js";
+import ListView from "./ListView.js";
 
 export default class AddView extends HTMLElement {
 
@@ -36,6 +37,7 @@ export default class AddView extends HTMLElement {
         <input type="submit" value="add"/>
       </fieldset>
     </form>
+    <list-view></list-view>
     `;
     this.nameInput = this.root.querySelector('#name');
     this.priceInput = this.root.querySelector('#price');
