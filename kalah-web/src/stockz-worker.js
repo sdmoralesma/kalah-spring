@@ -15,3 +15,11 @@ self.addEventListener('fetch', event => {
   event.respondWith(
       caches.match(request).then(response => (response || fetch (request))));
 });
+
+self.addEventListener('activate', event => {
+  console.log('cleaning old caches');
+  const staleCaches = caches.keys()
+  .then(keys => keys.filter(k => k !== cacheName))
+  .map(stale => caches.delete(stale));
+  event.waitUntil(staleCaches);
+});
