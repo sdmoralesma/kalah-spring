@@ -26,7 +26,7 @@ export default class AddView extends HTMLElement {
       <fieldset>     
         <legend>add stock</legend>
         <label for="name">name:
-          <input id="name" required placeholder="name"/>
+          <input id="name" required autocomplete="off" placeholder="name"/>
         </label>
         <label for="price">price:
           <input id="price" required type="number" min="0" value="0" placeholder="price"/>
@@ -52,8 +52,8 @@ export default class AddView extends HTMLElement {
     const price = this.priceInput.value;
     const amount = this.amountInput.value;
     Stocks.add(name, price, amount);
-
   }
+
 }
 
 customElements.define('add-view', AddView);

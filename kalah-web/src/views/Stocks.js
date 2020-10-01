@@ -26,14 +26,22 @@ export default class Stocks {
     Stocks.stocksChanged('remove', name);
   }
 
-  static all() {
-    const all = { ...localStorage };
-    return Object.keys(all)
-    .filter(key => key.startsWith('stockz.'))
-    .map(key => Stocks.getWithoutPrefix(key));
+  static priceTotal({price, amount}) {
+    return price * amount;
   }
 
-  static stocksChanged(type, name){
+  static all() {
+    const all = {...localStorage};
+    return Object.keys(all)
+    .filter(key => key.startsWith('stockz.'))
+    .map(key => Stocks.getWithoutPrefix(key))
+        .map(stock => {
+          stock.total = Stocks.priceTotal(stock);
+          return stock;
+        });
+  }
+
+  static stocksChanged(type, name) {
     const changeEvent = new CustomEvent('air-stocks', {
       detail: {
         type
@@ -41,4 +49,11 @@ export default class Stocks {
     });
     document.dispatchEvent(changeEvent);
   }
+
+  static total() {
+    return Stocks.all()
+    .map(stock => Stocks.priceTotal(stock))
+    .reduce((p, c) => p + c);
+  }
+
 }

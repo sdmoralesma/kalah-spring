@@ -4,15 +4,16 @@ export default class ListView extends HTMLElement {
 
   constructor() {
     super();
+    this.root = this.attachShadow({mode: 'open'});
   }
 
-  connectedCallback(){
+  connectedCallback() {
     addEventListener('air-stocks', _ => this.render());
-    return this.render();
+    this.render();
   }
 
   render() {
-    this.innerHTML = `
+    this.root.innerHTML = `
       <style>
         header {
         background: var(--air-brown, red);
@@ -21,8 +22,9 @@ export default class ListView extends HTMLElement {
       <header>
       <h2>the stocks</h2>
       </header>
-      ${this.table()}
+      ${this.table()}      
     `;
+    this.root.querySelectorAll('button').forEach(button => button.onclick = e => this.removeStock(e));
   }
 
   table() {
@@ -30,7 +32,7 @@ export default class ListView extends HTMLElement {
       <table>
       <thead>      
         <tr>
-          <th>name</th><th>price</th><th>amount</th>
+          <th>name</th><th>price</th><th>amount</th><th>total</th>
         </tr>
       </thead>
       <tbody>
@@ -46,13 +48,18 @@ export default class ListView extends HTMLElement {
     .reduce((previous, current) => previous + current);
   }
 
-  row({name, price, amount}) {
+  row({name, price, amount, total}) {
     return `
       <tr>
-      <td>${name}</td><td>${price}</td><td>${amount}</td>
+      <td>${name}</td><td>${price}</td><td>${amount}</td><td>${total}</td><td><button id="${name}">remove</button></td>
       </tr>
     `;
   }
+
+  removeStock({target}) {
+    Stocks.remove(target.id);
+  }
+
 }
 
 customElements.define('list-view', ListView);
