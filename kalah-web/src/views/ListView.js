@@ -6,11 +6,18 @@ export default class ListView extends AirElement {
 
   constructor() {
     super();
+    this.onViewChanged = _ => this.viewChanged();
+    this.listenerName = 'air-stocks';
   }
 
   connectedCallback() {
-    addEventListener('air-stocks', _ => this.viewChanged());
+    addEventListener(this.listenerName, this.onViewChanged());
     this.viewChanged();
+  }
+
+  disconnectedCallback() {
+    console.log('cleanup');
+    this.removeEventListener(this.listenerName, this.onViewChanged());
   }
 
   createView() {
@@ -32,7 +39,8 @@ export default class ListView extends AirElement {
       <tbody>
       ${Stocks.all().map(({name, price, amount, total}) => html` 
         <tr>
-          <td>${name}</td><td>${price}</td><td>${amount}</td><td>${total}</td><td><button id="${name}" @click=${e => this.removeStock(e)}>remove</button></td>
+          <td>${name}</td><td>${price}</td><td>${amount}</td><td>${total}</td><td><button id="${name}" @click=${e => this.removeStock(
+        e)}>remove</button></td>
         </tr>
        `)}
       </tbody>
@@ -40,7 +48,7 @@ export default class ListView extends AirElement {
     `;
   }
 
-  removeStock({ target }) {
+  removeStock({target}) {
     Stocks.remove(target.id);
   }
 
