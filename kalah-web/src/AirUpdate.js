@@ -1,14 +1,13 @@
-import { html } from "./lit-html/lit-html.js";
-import AirElement from "./views/AirElement.js";
+import {html, render} from "./lit-html/lit-html.js";
 
-export default class AirUpdate extends AirElement {
+export default class AirUpdate extends HTMLElement {
 
   constructor() {
     super();
   }
 
-  connectedCallback(){
-    this.viewChanged();
+  connectedCallback() {
+    render(this.createView(), this);
   }
 
   createView() {
