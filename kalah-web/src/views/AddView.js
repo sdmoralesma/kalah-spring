@@ -1,15 +1,20 @@
 import Stocks from "./Stocks.js";
 import ListView from "./ListView.js";
+import {html, render} from "./../lit-html/lit-html.js";
+import AirElement from "./AirElement.js";
 
-export default class AddView extends HTMLElement {
+export default class AddView extends AirElement {
 
   constructor() {
     super();
-    this.root = this.attachShadow({mode: 'open'});
   }
 
-  connectedCallback() {
-    this.root.innerHTML = `
+  connectedCallback(){
+    this.viewChanged();
+  }
+
+  createView() {
+    return html`
     <style>
       form{
        width: 80%;
@@ -22,7 +27,7 @@ export default class AddView extends HTMLElement {
         width: 3em;        
       }
     </style>
-    <form>
+    <form @submit=${e => this.addStock(e)}>
       <fieldset>     
         <legend>add stock</legend>
         <label for="name">name:
@@ -39,19 +44,12 @@ export default class AddView extends HTMLElement {
     </form>
     <list-view></list-view>
     `;
-    this.nameInput = this.root.querySelector('#name');
-    this.priceInput = this.root.querySelector('#price');
-    this.amountInput = this.root.querySelector('#amount');
-    this.root.querySelector('form').onsubmit = e => this.addStock(e);
   }
 
   addStock(event) {
     event.preventDefault();//to not submit the form
-    console.log(event);
-    const name = this.nameInput.value;
-    const price = this.priceInput.value;
-    const amount = this.amountInput.value;
-    Stocks.add(name, price, amount);
+    const {name, price, amount} = event.target.elements
+    Stocks.add(name.value, price.value, amount.value);
   }
 
 }
