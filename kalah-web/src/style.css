@@ -25,6 +25,12 @@ header {
   font-family: sans-serif;
 }
 
+header > section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 nav {
   grid-area: nav;
   background:var(--air-background, #fff);
@@ -60,4 +66,9 @@ air-crumb,total-view {
 
 small {
   font-size: 0.5em;
+}
+
+img {
+  width: 80%;
+  height: auto;
 }
