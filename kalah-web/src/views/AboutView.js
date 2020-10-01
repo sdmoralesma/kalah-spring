@@ -8,7 +8,7 @@ export default class AboutView extends AirElement {
     this.name = "duke";
   }
 
-  connectedCallback(){
+  connectedCallback() {
     this.viewChanged();
   }
 
