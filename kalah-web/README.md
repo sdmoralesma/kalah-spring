@@ -6,6 +6,7 @@
 
 * https://www.browsersync.io/
 * https://www.cypress.io/
+* https://rollupjs.org/
 
 2. Run script:
     
