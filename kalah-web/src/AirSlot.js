@@ -3,6 +3,7 @@ export default class AirSlot extends HTMLElement {
   constructor() {
     super();
     this.oldChild = null;
+    this.currentView = null;
     this.loadConfiguration();
     this.root = this.attachShadow({mode: 'open'});
   }
@@ -25,6 +26,7 @@ export default class AirSlot extends HTMLElement {
   onNavigation(evt) {
     const {detail} = evt;
     const {hash: linkName} = detail;
+    this.currentView = linkName;
     let file = `${linkName}View.js`;
     const viewConfiguration = this.configuration[linkName];
     if (viewConfiguration) {
