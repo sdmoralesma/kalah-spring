@@ -14,6 +14,11 @@ export default class ListView extends HTMLElement {
   }
 
   render() {
+    const row = ({name, price, amount, total}) => html`
+      <tr>
+      <td>${name}</td><td>${price}</td><td>${amount}</td><td>${total}</td><td><button id="${name}" @click=${e => this.removeStock(e)}>remove</button></td>
+      </tr>
+    `;
     const template = html`
       <style>
         header {
@@ -21,7 +26,7 @@ export default class ListView extends HTMLElement {
         }
       </style>
       <header>
-      <h2>the stocks</h2>
+        <h2>the stocks</h2>
       </header>
       <table>
       <thead>
@@ -30,23 +35,14 @@ export default class ListView extends HTMLElement {
         </tr>
       </thead>
       <tbody>
-      ${Stocks.all().map(stock => this.row(stock))}
+      ${Stocks.all().map(stock => row(stock))}
       </tbody>
       </table>
     `;
     render(template, this.root);
-    this.root.querySelectorAll('button').forEach(button => button.onclick = e => this.removeStock(e));
   }
 
-  row({name, price, amount, total}) {
-    return html`
-      <tr>
-      <td>${name}</td><td>${price}</td><td>${amount}</td><td>${total}</td><td><button id="${name}">remove</button></td>
-      </tr>
-    `;
-  }
-
-  removeStock({target}) {
+  removeStock({ target }) {
     Stocks.remove(target.id);
   }
 

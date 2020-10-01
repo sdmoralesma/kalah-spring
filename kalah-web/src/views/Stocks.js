@@ -22,7 +22,7 @@ export default class Stocks {
   }
 
   static remove(name) {
-    localStorage.removeItem(name);
+    localStorage.removeItem(`stockz.${name}`);
     Stocks.stocksChanged('remove', name);
   }
 
