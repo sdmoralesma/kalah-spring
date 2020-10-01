@@ -4,10 +4,11 @@ const views = ['AboutView', 'AddView', 'AirElement', 'ListView', 'Overview',
 const resources = ['index.html', 'style.css', 'configuration.json',
   'app.js', 'd3/d3.js'].concat(views);
 
+const prefetch = (name) => caches.open(name).then(cache => cache.addAll(resources))
+
 self.addEventListener('install', event => {
   self.skipWaiting();
-  event.waitUntil(
-      caches.open(cacheName).then(cache => cache.addAll(resources)))
+  event.waitUntil(prefetch(cacheName))
 });
 
 self.addEventListener('fetch', event => {
@@ -28,4 +29,5 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('message', event => {
   console.log(event);
+  caches.delete(cacheName).then(_ => prefetch(cacheName))
 });
