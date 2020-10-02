@@ -17,6 +17,8 @@ public class Game {
     private String userA;
     private String userB;
     private String board;
+    private String status;
+    private String winner;
 
     public Game() {
     }
@@ -43,6 +45,14 @@ public class Game {
         return board;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
     public void setUserA(String userA) {
         this.userA = userA;
     }
@@ -53,6 +63,14 @@ public class Game {
 
     public void setBoard(String board) {
         this.board = board;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
     }
 
     @Override

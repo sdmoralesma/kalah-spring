@@ -58,10 +58,6 @@ public class Board {
     }
 
     public Side getWinner() {
-        if (getStatus() != Status.FINISHED) {
-            throw new IllegalStateException("Game has not finished");
-        }
-
         int northPlayerTotalStones = map.get(Side.NORTH.getKalah());
         int southPlayerTotalStones = map.get(Side.SOUTH.getKalah());
 

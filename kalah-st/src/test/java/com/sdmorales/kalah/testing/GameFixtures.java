@@ -27,6 +27,8 @@ public class GameFixtures {
             .body("id", is(greaterThan(0)))
             .body("userA", is(not(emptyOrNullString())))
             .body("userB", is(not(emptyOrNullString())))
+            .body("status", is("IN_PROGRESS"))
+            .body("winner", is("NONE"))
             .extract().response().jsonPath();
     }
 

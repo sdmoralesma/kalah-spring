@@ -20,7 +20,10 @@ public class KalahService {
     public Game createGame() {
         UUID userAId = UUID.randomUUID();
         UUID userBId = UUID.randomUUID();
-        Game gameToSave = new Game(userAId.toString(), userBId.toString(), new Board().asJson());
+        Board newBoard = new Board();
+        Game gameToSave = new Game(userAId.toString(), userBId.toString(), newBoard.asJson());
+        gameToSave.setStatus(newBoard.getStatus().asString());
+        gameToSave.setWinner(newBoard.getWinner().asString());
         return kalahRepository.save(gameToSave);
     }
 
@@ -35,7 +38,10 @@ public class KalahService {
         Board board = Board.fromJson(game.getBoard());
         Board newBoard = board.move(pitId);
         game.setBoard(newBoard.asJson());
-        return Optional.of(game);
+        game.setStatus(newBoard.getStatus().asString());
+        game.setWinner(newBoard.getWinner().asString());
+        Game savedGame = kalahRepository.save(game);
+        return Optional.of(savedGame);
     }
 
     @Transactional
@@ -46,8 +52,12 @@ public class KalahService {
         }
 
         Game game = optionalGame.get();
-        game.setBoard(new Board(boardAsMap).asJson());
-        return Optional.of(game);
+        Board newBoard = new Board(boardAsMap);
+        game.setBoard(newBoard.asJson());
+        game.setStatus(newBoard.getStatus().asString());
+        game.setWinner(newBoard.getWinner().asString());
+        Game savedGame = kalahRepository.save(game);
+        return Optional.of(savedGame);
     }
 
     @Transactional(readOnly = true)

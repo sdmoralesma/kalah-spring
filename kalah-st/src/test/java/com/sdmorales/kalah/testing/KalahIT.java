@@ -142,6 +142,8 @@ class KalahIT {
             .then()
             .statusCode(200)
             .contentType(ContentType.JSON)
+            .body("status", is("FINISHED"))
+            .body("winner", is("NORTH"))
             .extract().response();
 
         Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
@@ -166,6 +168,8 @@ class KalahIT {
             .then()
             .statusCode(200)
             .contentType(ContentType.JSON)
+            .body("status", is("FINISHED"))
+            .body("winner", is("SOUTH"))
             .extract().response();
 
         Map<String, Integer> board = JsonPath.from(response.jsonPath().getString("board")).getMap("$");
