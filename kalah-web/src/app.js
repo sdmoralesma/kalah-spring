@@ -3,6 +3,7 @@ import AirSlot from "./AirSlot.js";
 import AirCrumb from "./AirCrumb.js";
 import TotalView from "./views/TotalView.js";
 import AirUpdate from "./AirUpdate.js";
+import KalahBoard from "./KalahBoard.js";
 
 navigator.serviceWorker.register('./stockz-worker.js')
     .then(registration => console.log("registration OK",registration))
