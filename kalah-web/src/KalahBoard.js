@@ -4,12 +4,12 @@ export default class KalahBoard extends HTMLElement {
 
   constructor() {
     super();
+    this.game = null;
     this.board = null;
   }
 
   connectedCallback() {
     addEventListener('kalah-move', _ => this.viewChanged());
-    this.createBoard();
     this.viewChanged();
   }
 
@@ -19,21 +19,27 @@ export default class KalahBoard extends HTMLElement {
 
   createView() {
     return html`
+      <style>
+      .borderless td, .borderless th {
+        border: none;
+      }
+      </style>
       <div class="container">
         <div class="row">
-          <h1>Board</h1>
-          <br>
-          <div class="w-100 mx-auto">            
-            <table class="table table-bordered">
+          <div class="w-100 mx-auto">
+            <div class="alert alert-dark" role="alert">
+              This is a dark alert—check it out!
+            </div>
+            <table class="table borderless">
               <tbody>
               <tr>
                 <th></th>
-                <td><button id="13" type="button" class="btn btn-light btn-block" @click=${e => this.makeMove(e)}>${this.stonesByPitId(13)}</button></td>
-                <td><button id="12" type="button" class="btn btn-light btn-block" @click=${e => this.makeMove(e)}>${this.stonesByPitId(12)}</button></td>
-                <td><button id="11" type="button" class="btn btn-light btn-block" @click=${e => this.makeMove(e)}>${this.stonesByPitId(11)}</button></td>
-                <td><button id="10" type="button" class="btn btn-light btn-block" @click=${e => this.makeMove(e)}>${this.stonesByPitId(10)}</button></td>
-                <td><button id="9" type="button" class="btn btn-light btn-block"  @click=${e => this.makeMove(e)}>${this.stonesByPitId(9)}</button></td>
-                <td><button id="8" type="button" class="btn btn-light btn-block"  @click=${e => this.makeMove(e)}>${this.stonesByPitId(8)}</button></td>
+                <td><button id="13" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(13)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(13)}</button></td>
+                <td><button id="12" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(12)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(12)}</button></td>
+                <td><button id="11" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(11)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(11)}</button></td>
+                <td><button id="10" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(10)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(10)}</button></td>
+                <td><button id="9" type="button" class="btn btn-primary btn-block"  ?disabled=${this.isDisabled(9)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(9)}</button></td>
+                <td><button id="8" type="button" class="btn btn-primary btn-block"  ?disabled=${this.isDisabled(8)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(8)}</button></td>
               </tr>
               <tr>
                 <th><button id="14" type="button" class="btn btn-outline-info btn-block" disabled>${this.stonesByPitId(14)}</button></th>
@@ -42,12 +48,12 @@ export default class KalahBoard extends HTMLElement {
               </tr>
               <tr>
                 <th></th>
-                <td><button id="1" type="button" class="btn btn-light btn-block" @click=${e => this.makeMove(e)}>${this.stonesByPitId(1)}</button></td>
-                <td><button id="2" type="button" class="btn btn-light btn-block" @click=${e => this.makeMove(e)}>${this.stonesByPitId(2)}</button></td>
-                <td><button id="3" type="button" class="btn btn-light btn-block" @click=${e => this.makeMove(e)}>${this.stonesByPitId(3)}</button></td>
-                <td><button id="4" type="button" class="btn btn-light btn-block" @click=${e => this.makeMove(e)}>${this.stonesByPitId(4)}</button></td>
-                <td><button id="5" type="button" class="btn btn-light btn-block" @click=${e => this.makeMove(e)}>${this.stonesByPitId(5)}</button></td>
-                <td><button id="6" type="button" class="btn btn-light btn-block" @click=${e => this.makeMove(e)}>${this.stonesByPitId(6)}</button></td>
+                <td><button id="1" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(1)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(1)}</button></td>
+                <td><button id="2" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(2)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(2)}</button></td>
+                <td><button id="3" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(3)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(3)}</button></td>
+                <td><button id="4" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(4)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(4)}</button></td>
+                <td><button id="5" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(5)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(5)}</button></td>
+                <td><button id="6" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(6)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(6)}</button></td>
               </tr>
               </tbody>
             </table>
@@ -56,63 +62,76 @@ export default class KalahBoard extends HTMLElement {
       </div>
       <br>
       <br>
-      <button id="new-game" type="button" class="btn btn-light btn-block" @click=${_ => this.createBoard()}>New Game</button>
+      <div class="container">
+        <button id="new-game" type="button" class="btn btn-dark btn-lg" @click=${_ => this.createBoard()}>New Game</button>
+      </div>
     `;
   }
-
-  assignStonesToPits() {
-    document.querySelectorAll('button');
-  }
-
 
   createBoard() {
     fetch('http://localhost:8080/games/', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'}
     })
-    .then(response => response.json())
-    .catch(error => console.error(error))
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then(data => {
-      this.board = data;
+      this.game = data;
+      this.board = JSON.parse(data.board);
       this.viewChanged();
-      console.log("new board" + JSON.stringify(this.board))
-    });
+      console.log("new game" + JSON.stringify(this.game))
+    })
+    .catch(error => console.error(error));
   }
 
   makeMove(event){
     event.preventDefault();
     const pitId = event.target.id;
-    const gameId = this.board.id;
+    const gameId = this.game.id;
     console.log(gameId, pitId);
     fetch(`http://localhost:8080/games/${gameId}/pits/${pitId}`, {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'}
     })
-    .then(response => response.json())
-    .catch(error => console.error(error))
-    .then(data => {
-      this.board = data
-    })
-    .then(() => console.log("move on board" + JSON.stringify(this.board)))
-    this.triggerBoardChangedEvent(gameId, pitId);
-  }
-
-  triggerBoardChangedEvent(gameId, pitId) {
-    const event = new CustomEvent('kalah-move', {
-      detail: {
-        gameId,
-        pitId
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-    });
-    document.dispatchEvent(event);
+      return response.json();
+    })
+    .then(data => {
+      this.game = data;
+      this.board = JSON.parse(data.board);
+      this.viewChanged();
+      console.log("move on game" + JSON.stringify(this.game));
+    })
+    .catch(error => console.error(error));
   }
 
   stonesByPitId(pitId) {
-    if(this.board) {
-      return JSON.parse(this.board.board)[pitId];
-    }
+    return this.board ? this.board[pitId] : 0;
+  }
 
-    return -1;
+  isDisabled(pitId) {
+    if (this.board) {
+      const side = this.board[0];
+      if(side) {
+        if (pitId >= 1 && pitId <= 6) {
+          return true;
+        }
+      } else {
+        if (pitId >= 8 && pitId <= 13) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+    return true;
   }
 
 }
