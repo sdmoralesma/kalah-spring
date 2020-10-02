@@ -27,33 +27,33 @@ export default class KalahBoard extends HTMLElement {
       <div class="container">
         <div class="row">
           <div class="w-100 mx-auto">
-            <div class="alert alert-dark" role="alert">
-              This is a dark alert—check it out!
+            <div class="alert alert-secondary" role="alert">
+              ${this.printStatus()}
             </div>
             <table class="table borderless">
               <tbody>
               <tr>
                 <th></th>
-                <td><button id="13" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(13)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(13)}</button></td>
-                <td><button id="12" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(12)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(12)}</button></td>
-                <td><button id="11" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(11)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(11)}</button></td>
-                <td><button id="10" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(10)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(10)}</button></td>
-                <td><button id="9" type="button" class="btn btn-primary btn-block"  ?disabled=${this.isDisabled(9)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(9)}</button></td>
-                <td><button id="8" type="button" class="btn btn-primary btn-block"  ?disabled=${this.isDisabled(8)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(8)}</button></td>
+                <td><button id="13" type="button" class="btn btn-dark btn-block" ?disabled=${this.isDisabled(13)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(13)}</button></td>
+                <td><button id="12" type="button" class="btn btn-dark btn-block" ?disabled=${this.isDisabled(12)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(12)}</button></td>
+                <td><button id="11" type="button" class="btn btn-dark btn-block" ?disabled=${this.isDisabled(11)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(11)}</button></td>
+                <td><button id="10" type="button" class="btn btn-dark btn-block" ?disabled=${this.isDisabled(10)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(10)}</button></td>
+                <td><button id="9" type="button" class="btn btn-dark btn-block"  ?disabled=${this.isDisabled(9)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(9)}</button></td>
+                <td><button id="8" type="button" class="btn btn-dark btn-block"  ?disabled=${this.isDisabled(8)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(8)}</button></td>
               </tr>
               <tr>
-                <th><button id="14" type="button" class="btn btn-outline-info btn-block" disabled>${this.stonesByPitId(14)}</button></th>
+                <th><button id="14" type="button" class="btn btn-outline-dark btn-block" disabled>${this.stonesByPitId(14)}</button></th>
                 <th colspan="6"></th>
-                <th><button id="7" type="button" class="btn btn-outline-info btn-block" disabled>${this.stonesByPitId(7)}</button></th>
+                <th><button id="7" type="button" class="btn btn-outline-dark btn-block" disabled>${this.stonesByPitId(7)}</button></th>
               </tr>
               <tr>
                 <th></th>
-                <td><button id="1" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(1)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(1)}</button></td>
-                <td><button id="2" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(2)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(2)}</button></td>
-                <td><button id="3" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(3)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(3)}</button></td>
-                <td><button id="4" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(4)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(4)}</button></td>
-                <td><button id="5" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(5)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(5)}</button></td>
-                <td><button id="6" type="button" class="btn btn-primary btn-block" ?disabled=${this.isDisabled(6)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(6)}</button></td>
+                <td><button id="1" type="button" class="btn btn-dark btn-block" ?disabled=${this.isDisabled(1)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(1)}</button></td>
+                <td><button id="2" type="button" class="btn btn-dark btn-block" ?disabled=${this.isDisabled(2)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(2)}</button></td>
+                <td><button id="3" type="button" class="btn btn-dark btn-block" ?disabled=${this.isDisabled(3)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(3)}</button></td>
+                <td><button id="4" type="button" class="btn btn-dark btn-block" ?disabled=${this.isDisabled(4)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(4)}</button></td>
+                <td><button id="5" type="button" class="btn btn-dark btn-block" ?disabled=${this.isDisabled(5)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(5)}</button></td>
+                <td><button id="6" type="button" class="btn btn-dark btn-block" ?disabled=${this.isDisabled(6)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(6)}</button></td>
               </tr>
               </tbody>
             </table>
@@ -88,7 +88,7 @@ export default class KalahBoard extends HTMLElement {
     .catch(error => console.error(error));
   }
 
-  makeMove(event){
+  makeMove(event) {
     event.preventDefault();
     const pitId = event.target.id;
     const gameId = this.game.id;
@@ -119,7 +119,7 @@ export default class KalahBoard extends HTMLElement {
   isDisabled(pitId) {
     if (this.board) {
       const side = this.board[0];
-      if(side) {
+      if (side) {
         if (pitId >= 1 && pitId <= 6) {
           return true;
         }
@@ -131,9 +131,36 @@ export default class KalahBoard extends HTMLElement {
 
       return false;
     }
+
+    if (this.game && this.game.status === "FINISHED") {
+      return true;
+    }
+
     return true;
   }
 
+  printStatus() {
+    if (!this.game) {
+      return "Please start a new game by clicking the 'New game'' button";
+    }
+
+    switch (this.game.status) {
+      case 'IN_PROGRESS':
+        return `Turn of player in side ${this.board[0] ? 'North' : 'South'}`
+      case 'FINISHED':
+        switch (this.game.winner) {
+          case 'NORTH':
+          case 'SOUTH':
+            return `The winner is the ${this.game.winner} player!`
+          case 'NONE':
+            return 'The game finished in a draw!'
+          default :
+            return `Unknown winner: ${this.game.winner}`;
+        }
+      default :
+        return `Unknown status: ${this.game.status}`;
+    }
+  }
 }
 
 customElements.define('kalah-board', KalahBoard)
