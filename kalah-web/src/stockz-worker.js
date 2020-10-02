@@ -10,13 +10,11 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
   const {request} = event
-  console.log('on-fetch', request);
   event.respondWith(
       caches.match(request).then(response => (response || fetch(request))));
 });
 
 self.addEventListener('activate', event => {
-  console.log('cleaning old caches');
   self.clients.claim();
   const staleCaches = caches.keys()
   .then(keys => keys.filter(k => k !== cacheName))
@@ -25,6 +23,5 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('message', event => {
-  console.log(event);
   caches.delete(cacheName).then(_ => prefetch(cacheName))
 });
