@@ -8,7 +8,5 @@ cp src/*.css dist/
 cp src/kalah-worker.js dist/
 cp src/favicon.ico dist/
 cp src/webmanifest.json dist/
-
-mkdir dist/images
-cp src/images/logo.svg dist/images/logo.svg
+cp -R src/images/ dist/images/
 
