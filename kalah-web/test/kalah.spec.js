@@ -1,7 +1,7 @@
 context("kalah", () => {
 
   beforeEach(() => {
-    cy.visit("http://localhost:8080/");
+    cy.visit("http://localhost:3000");
   });
 
   it('create game and pick a pit for both sides', () => {
