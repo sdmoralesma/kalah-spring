@@ -33,7 +33,7 @@ public class Board {
 
     public Board(Map<Integer, Integer> map) {
         if (map.size() != REQUIRED_VALUES_FOR_BOARD) {
-            throw new IllegalArgumentException("Map requires exactly " + REQUIRED_VALUES_FOR_BOARD + "to create board");
+            throw new IllegalArgumentException("Requires " + REQUIRED_VALUES_FOR_BOARD + " entries to create a board");
         }
         this.map = Collections.unmodifiableMap(map);
     }

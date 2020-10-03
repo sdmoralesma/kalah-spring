@@ -46,7 +46,7 @@ public class KalahController {
     }
 
     @GetMapping("/games/{gameId}")
-    public ResponseEntity<Game> createGame(@PathVariable("gameId") Long gameId) {
+    public ResponseEntity<Game> retrieveGame(@PathVariable("gameId") Long gameId) {
         Optional<Game> byGameId = kalahService.findByGameId(gameId);
         return byGameId.map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
