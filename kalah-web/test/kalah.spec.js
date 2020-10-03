@@ -1,7 +1,7 @@
 context("kalah", () => {
 
   beforeEach(() => {
-    cy.visit("http://localhost:3000/");
+    cy.visit("http://localhost:8080/");
   });
 
   it('create game and pick a pit for both sides', () => {
@@ -28,6 +28,12 @@ context("kalah", () => {
 
     cy.get('air-slot').shadow().find('kalah-board').shadow()
     .find('[id="alert"]').should("contain.text", "Turn of player in side South");
+
+    cy.get('air-slot').shadow().find('kalah-board').shadow()
+    .find('[id="7"]').should("contain.text", "1");
+
+    cy.get('air-slot').shadow().find('kalah-board').shadow()
+    .find('[id="14"]').should("contain.text", "1");
 
   });
 
