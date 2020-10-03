@@ -1,4 +1,4 @@
-package com.sdmorales.kalah;
+package com.sdmorales.kalah.control;
 
 import com.sdmorales.kalah.domain.GameException;
 import org.springframework.http.MediaType;

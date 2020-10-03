@@ -1,4 +1,4 @@
-package com.sdmorales.kalah;
+package com.sdmorales.kalah.entity;
 
 import java.util.Objects;
 import java.util.StringJoiner;

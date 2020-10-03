@@ -1,5 +1,7 @@
-package com.sdmorales.kalah;
+package com.sdmorales.kalah.boundary;
 
+import com.sdmorales.kalah.entity.Game;
+import com.sdmorales.kalah.control.KalahRepository;
 import com.sdmorales.kalah.domain.Board;
 import java.util.Map;
 import java.util.Optional;
