@@ -39,8 +39,11 @@ export default class ListView extends AirElement {
       <tbody>
       ${Stocks.all().map(({name, price, amount, total}) => html` 
         <tr>
-          <td>${name}</td><td>${price}</td><td>${amount}</td><td>${total}</td><td><button id="${name}" @click=${e => this.removeStock(
-        e)}>remove</button></td>
+          <td>${name}</td>
+          <td>${price}</td>
+          <td>${amount}</td>
+          <td>${total}</td>
+          <td><button id="${name}" @click=${e => this.removeStock(e)}>remove</button></td>
         </tr>
        `)}
       </tbody>

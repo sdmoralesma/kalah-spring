@@ -1,6 +1,7 @@
-import {html, render} from "./lit-html/lit-html.js";
+import AirElement from "./AirElement.js";
+import {html, render} from "./../lit-html/lit-html.js";
 
-export default class KalahBoard extends HTMLElement {
+export default class KalahBoard extends AirElement {
 
   constructor() {
     super();
@@ -13,12 +14,11 @@ export default class KalahBoard extends HTMLElement {
     this.viewChanged();
   }
 
-  viewChanged() {
-    render(this.createView(), this);
-  }
-
   createView() {
     return html`
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" 
+            crossorigin="anonymous">
       <style>
       .borderless td, .borderless th {
         border: none;

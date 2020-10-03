@@ -31,7 +31,7 @@ header > h2 {
   color: #80868b;
 }
 
-air-crumb, total-view {
+air-crumb {
   color: #fafafa;
 }
 
@@ -70,7 +70,7 @@ a {
   background: lightpink;
 }
 
-air-crumb,total-view {
+air-crumb {
   font-size: 0.8em;
 }
 

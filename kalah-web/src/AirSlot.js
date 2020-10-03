@@ -1,7 +1,8 @@
 import AddView from "./views/AddView.js";
 import ListView from "./views/ListView.js";
-import Overview from "./views/Overview.js";
+import OverviewView from "./views/OverviewView.js";
 import AboutView from "./views/AboutView.js";
+import KalahBoard from "./views/KalahBoard.js";
 
 export default class AirSlot extends HTMLElement {
 
@@ -49,7 +50,10 @@ export default class AirSlot extends HTMLElement {
         newChild = new ListView();
         break;
       case 'Overview':
-        newChild = new Overview();
+        newChild = new OverviewView();
+        break;
+      case 'KalahBoard':
+        newChild = new KalahBoard();
         break;
       default:
         throw new Error(`Unknown route: ${linkName}`);
