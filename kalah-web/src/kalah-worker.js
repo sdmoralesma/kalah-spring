@@ -5,7 +5,7 @@ const prefetch = (name) => caches.open(name).then(cache => cache.addAll(resource
 
 self.addEventListener('install', event => {
   self.skipWaiting();
-  event.waitUntil(prefetch(cacheName))
+  event.waitUntil(prefetch(cacheName));
 });
 
 self.addEventListener('fetch', event => {
@@ -16,12 +16,10 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('activate', event => {
   self.clients.claim();
-  const staleCaches = caches.keys()
-  .then(keys => keys.filter(k => k !== cacheName))
-  .map(stale => caches.delete(stale));
+  const staleCaches = caches.keys().then(keys => keys.filter(key => key !== cacheName).map(stale => caches.delete(stale)));
   event.waitUntil(staleCaches);
 });
 
 self.addEventListener('message', event => {
-  caches.delete(cacheName).then(_ => prefetch(cacheName))
+  caches.delete(cacheName).then(_ => prefetch(cacheName));
 });

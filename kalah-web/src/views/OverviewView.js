@@ -8,7 +8,6 @@ export default class OverviewView extends AirElement {
   }
 
   connectedCallback() {
-    addEventListener('air-stocks', _ => this.onViewChanged());
     this.viewChanged();
   }
 

@@ -33,17 +33,17 @@ export default class AirNav extends HTMLElement {
       bubbles: true
     });
     this.dispatchEvent(event);
-    const element = this.querySelector(`[href="${hash}"]`)
+    const element = this.querySelector(`[href="${hash}"]`);
     this.onLinkClicked({target: element});
   }
 
   onLinkClicked(evt) {
     const {target} = evt;
     if (this.activeLink) {
-      this.activeLink.classList.toggle(this.activeLinkClass)
+      this.activeLink.classList.toggle(this.activeLinkClass);
     }
     this.activeLink = target;
-    this.activeLink.classList.toggle(this.activeLinkClass)
+    this.activeLink.classList.toggle(this.activeLinkClass);
   }
 
 }

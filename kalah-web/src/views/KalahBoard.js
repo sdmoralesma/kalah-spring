@@ -10,7 +10,6 @@ export default class KalahBoard extends AirElement {
   }
 
   connectedCallback() {
-    addEventListener('kalah-move', _ => this.viewChanged());
     this.viewChanged();
   }
 
@@ -27,7 +26,7 @@ export default class KalahBoard extends AirElement {
       <div class="container">
         <div class="row">
           <div class="w-100 mx-auto">
-            <div class="alert alert-secondary" role="alert">
+            <div id="alert" class="alert alert-secondary" role="alert">
               ${this.printStatus()}
             </div>
             <table class="table borderless">
