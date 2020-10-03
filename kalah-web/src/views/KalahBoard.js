@@ -42,9 +42,9 @@ export default class KalahBoard extends AirElement {
                 <td><button id="8" type="button" class="btn btn-dark btn-block"  ?disabled=${this.isDisabled(8)} @click=${e => this.makeMove(e)}>${this.stonesByPitId(8)}</button></td>
               </tr>
               <tr>
-                <th><button id="14" type="button" class="btn btn-outline-dark btn-block" disabled>${this.stonesByPitId(14)}</button></th>
+                <th><button id="14" type="button" class="btn btn-outline-dark btn-block" disabled>${this.stonesByPitId(14)} <span class="badge badge-light">North</span></button></th>
                 <th colspan="6"></th>
-                <th><button id="7" type="button" class="btn btn-outline-dark btn-block" disabled>${this.stonesByPitId(7)}</button></th>
+                <th><button id="7" type="button" class="btn btn-outline-dark btn-block" disabled>${this.stonesByPitId(7)} <span class="badge badge-light">South</span></button></th>
               </tr>
               <tr>
                 <th></th>
