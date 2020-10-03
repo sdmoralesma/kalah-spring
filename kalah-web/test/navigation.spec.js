@@ -3,7 +3,7 @@ context('navigation', () => {
     cy.visit("http://localhost:3000");
   })
 
-  const views = ["Overview", "Add", "List", "About"];
+  const views = ["Overview", "KalahBoard", "About"];
   views.forEach(view => {
     it(`nav by click -> ${view}`, () => {
       cy.get(`[href="#${view}"]`)

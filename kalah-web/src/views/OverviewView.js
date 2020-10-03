@@ -1,19 +1,19 @@
-import Stocks from "./Stocks.js";
+import AirElement from "./AirElement.js";
+import {html} from "./../lit-html/lit-html.js";
 
-export default class OverviewView extends HTMLElement {
+export default class OverviewView extends AirElement {
 
   constructor() {
     super();
-    this.root = this.attachShadow({mode: 'open'});
   }
 
   connectedCallback() {
-    this.render();
-    addEventListener('air-stocks', _ => this.render());
+    addEventListener('air-stocks', _ => this.onViewChanged());
+    this.viewChanged();
   }
 
-  render() {
-    this.root.innerHTML = `
+  createView() {
+    return html`
       <style>
       .chart div {
         font: 10px sans-serif;
@@ -25,16 +25,8 @@ export default class OverviewView extends HTMLElement {
       }      
       </style>
       <div class="chart"></div>
+      <h1>hello world</h1>
       `;
-
-    const data = Stocks.all();
-    const chartNode = this.root.querySelector('.chart')
-    d3.select(chartNode)
-    .selectAll("div")
-    .data(data)
-    .enter().append("div")
-    .style("width", stock => stock.total * 10 + "px")
-    .text(stock => `${stock.name}: ${stock.total}`);
   }
 }
 

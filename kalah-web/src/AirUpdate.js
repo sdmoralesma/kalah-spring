@@ -18,7 +18,7 @@ export default class AirUpdate extends HTMLElement {
 
   update(event) {
     event.preventDefault();
-    console.log('---updating??---');
+    console.log('---updating---');
     navigator.serviceWorker.controller.postMessage('update.please');
   }
 }

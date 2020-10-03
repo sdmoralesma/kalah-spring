@@ -1,4 +1,4 @@
-import {html, render} from "./../lit-html/lit-html.js";
+import {render} from "./../lit-html/lit-html.js";
 
 export default class AirElement extends HTMLElement {
 

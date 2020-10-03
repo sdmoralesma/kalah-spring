@@ -16,6 +16,7 @@ export default class AboutView extends AirElement {
     return html`
     <article>
       <h3>powered by web standards && ${this.name}</h3>
+      <p class="has-line-data" data-line-start="4" data-line-end="5">Kalah is a Spring-based, mobile-friendly vanilla JS powered HTML5 game.</p> 
     </article>
     `;
   }
