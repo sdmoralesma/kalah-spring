@@ -1,17 +1,17 @@
 {
-  "name": "stockz",
-  "short_name": "stockz",
+  "name": "kalah",
+  "short_name": "kalah",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fff",
-  "description": "Stocks Management App",
+  "description": "Kalah Game",
   "icons": [{
-    "src": "images/logo168.png",
-    "sizes": "168x168",
+    "src": "images/logo128.png",
+    "sizes": "128x128",
     "type": "image/png"
   }, {
-    "src": "images/logo192.png",
-    "sizes": "192x192",
+    "src": "images/logo256.png",
+    "sizes": "256x256",
     "type": "image/png"
   },  {
     "src": "images/logo512.png",

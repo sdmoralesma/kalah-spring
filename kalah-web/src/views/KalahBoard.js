@@ -1,5 +1,5 @@
 import AirElement from "./AirElement.js";
-import {html, render} from "./../lit-html/lit-html.js";
+import {html} from "./../lit-html/lit-html.js";
 
 export default class KalahBoard extends AirElement {
 
