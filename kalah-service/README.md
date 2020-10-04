@@ -1,4 +1,10 @@
-# Build
+# Kalah Service
+
+Implements the REST services required and bundles a web app to play the Kalah Game
+
+The application uses the [Entity-Control-Boundary Pattern](https://en.wikipedia.org/wiki/Entity-control-boundary)
+
+### Build
     
     mvn clean package
 
@@ -6,7 +12,7 @@
 
     mvn spring-boot:run 
 
-### Execute system sest
+### Execute system tests
 
 Switch to the "-st" module and perform:
 
@@ -20,4 +26,4 @@ Switch to the "-perf" module and perform:
     
 To run the scenarios first and then the performance test use:
         
-    mvn clean test    
+    mvn clean test
