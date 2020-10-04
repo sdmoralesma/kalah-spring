@@ -37,6 +37,10 @@ public class Board {
 
     public Board(Map<Integer, Integer> map) {
         Objects.requireNonNull(map);
+        boolean anyValueIsNegative = map.values().stream().mapToInt(i -> i).anyMatch(value -> value < 0);
+        if (anyValueIsNegative) {
+            throw new IllegalStateException("Only values >= 0 are allowed in a board");
+        }
         if (map.size() != REQUIRED_VALUES_FOR_BOARD) {
             throw new IllegalArgumentException("Requires " + REQUIRED_VALUES_FOR_BOARD + " entries to create a board");
         }
