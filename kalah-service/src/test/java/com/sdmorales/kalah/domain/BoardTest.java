@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Function;
@@ -160,22 +159,6 @@ class BoardTest {
         assertBoardEquals(new Board(1, 0, 0, 0, 0, 0, 1, 15, 0, 1, 0, 0, 0, 0, 10), result);
     }
 
-
-    @ParameterizedTest
-    @MethodSource("listProvider")
-    void verifyInstantiationByArrayOfNewBoardFails(List<Integer> intsList) {
-        Integer[] integers = intsList.toArray(new Integer[0]);
-        assertThrows(IllegalArgumentException.class, () -> new Board(integers));
-    }
-
-    static Stream<Arguments> listProvider() {
-        return Stream.of(
-            arguments(Collections.emptyList()),
-            arguments(List.of(1,2,3)),
-            arguments(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16))
-        );
-    }
-
     @ParameterizedTest
     @MethodSource("mapProvider")
     void verifyInstantiationByMapOfNewBoardFails(Map<Integer, Integer> intsMap) {
@@ -191,6 +174,12 @@ class BoardTest {
         );
     }
 
+    @Test
+    void verifyNextTurnDoesNotAddStoneToOpponentsKalah() {
+        Board result = new Board(1, 0, 0, 0, 0, 0, 1, 10, 0, 0, 0, 0, 0, 10, 10).move(13);
+
+        assertBoardEquals(new Board(0, 1, 1, 1, 0, 1, 2, 10, 1, 1, 0, 0, 0, 0, 13), result);
+    }
 
     private static void assertBoardEquals(Board expected, Board actual) {
         assertEquals(new TreeMap<>(expected.asMap()), new TreeMap<>(actual.asMap()));

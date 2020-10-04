@@ -7,8 +7,17 @@ import java.time.temporal.ValueRange;
  * sides in a Kalah game: North and South.
  */
 public enum Side {
+    /**
+     * The North side player
+     */
     NORTH(1, 14, ValueRange.of(8, 13), "NORTH"),
+    /**
+     * The South side player
+     */
     SOUTH(0, 7, ValueRange.of(1, 6), "SOUTH"),
+    /**
+     * In case there is a Draw
+     */
     NONE(-1, -1, null, "NONE");
 
     private final int value;
@@ -35,8 +44,14 @@ public enum Side {
         return kalah;
     }
 
-    public boolean isValidValue(int value) {
-        return range.isValidValue(value);
+    /**
+     * Validates if the pit belong to the side.
+     *
+     * @param pitId the id of the pit to evaluate
+     * @return true if the id is in the range of the {@link Side}, false otherwise
+     */
+    public boolean isPitIdInRange(int pitId) {
+        return range.isValidValue(pitId);
     }
 
     public static Side flip(Side side) {
