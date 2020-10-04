@@ -11,11 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * A {@link Board} is modeled by a map with 16 entries. The first entry (i.e: 0) represents the orientation of the game,
+ * the other position from 1 to 15 represent pits where 7 and 14 are special because those are the kalah for each side.
+ */
 public class Board {
 
     public static final int KEY_ORIENTATION = 0;
@@ -32,6 +37,7 @@ public class Board {
     }
 
     public Board(Map<Integer, Integer> map) {
+        Objects.requireNonNull(map);
         if (map.size() != REQUIRED_VALUES_FOR_BOARD) {
             throw new IllegalArgumentException("Requires " + REQUIRED_VALUES_FOR_BOARD + " entries to create a board");
         }
@@ -39,6 +45,7 @@ public class Board {
     }
 
     public Board(Integer... values) {
+        Objects.requireNonNull(values);
         if (values.length != REQUIRED_VALUES_FOR_BOARD) {
             throw new IllegalArgumentException("Requires " + REQUIRED_VALUES_FOR_BOARD + " values to create a board");
         }

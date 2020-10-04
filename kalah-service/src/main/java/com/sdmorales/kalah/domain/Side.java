@@ -2,6 +2,10 @@ package com.sdmorales.kalah.domain;
 
 import java.time.temporal.ValueRange;
 
+/**
+ * Represents the two players of a kalah game, where each player is at one side opposite to the other. There are two
+ * sides in a Kalah game: North and South.
+ */
 public enum Side {
     NORTH(1, 14, ValueRange.of(8, 13), "NORTH"),
     SOUTH(0, 7, ValueRange.of(1, 6), "SOUTH"),

@@ -2,10 +2,21 @@ package com.sdmorales.kalah.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class BoardTest {
 
@@ -102,14 +113,14 @@ class BoardTest {
     void verifyNorthPlayerWins() {
         Board result = new Board(1, 0, 0, 0, 0, 0, 1, 35, 0, 0, 0, 0, 0, 0, 36);
 
-        assertEquals(Side.NORTH, result.getWinner());// todo: fix me
+        assertEquals(Side.NORTH, result.getWinner());
     }
 
     @Test
     void verifySouthPlayerWins() {
         Board result = new Board(0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 1, 35);
 
-        assertEquals(Side.SOUTH, result.getWinner());// todo: fix me
+        assertEquals(Side.SOUTH, result.getWinner());
     }
 
     @Test
@@ -148,6 +159,38 @@ class BoardTest {
 
         assertBoardEquals(new Board(1, 0, 0, 0, 0, 0, 1, 15, 0, 1, 0, 0, 0, 0, 10), result);
     }
+
+
+    @ParameterizedTest
+    @MethodSource("listProvider")
+    void verifyInstantiationByArrayOfNewBoardFails(List<Integer> intsList) {
+        Integer[] integers = intsList.toArray(new Integer[0]);
+        assertThrows(IllegalArgumentException.class, () -> new Board(integers));
+    }
+
+    static Stream<Arguments> listProvider() {
+        return Stream.of(
+            arguments(Collections.emptyList()),
+            arguments(List.of(1,2,3)),
+            arguments(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("mapProvider")
+    void verifyInstantiationByMapOfNewBoardFails(Map<Integer, Integer> intsMap) {
+        assertThrows(IllegalArgumentException.class, () -> new Board(intsMap));
+    }
+
+    static Stream<Arguments> mapProvider() {
+        return Stream.of(
+            arguments(Collections.emptyMap()),
+            arguments(Map.of(1,2,3,4)),
+            arguments(IntStream.range(1,20).boxed()
+                .collect(Collectors.toMap(Function.identity(),Function.identity())))
+        );
+    }
+
 
     private static void assertBoardEquals(Board expected, Board actual) {
         assertEquals(new TreeMap<>(expected.asMap()), new TreeMap<>(actual.asMap()));
