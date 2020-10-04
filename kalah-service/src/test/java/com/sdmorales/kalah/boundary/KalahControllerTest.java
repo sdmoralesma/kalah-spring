@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.when;
 
-import com.sdmorales.kalah.domain.Board;
 import com.sdmorales.kalah.entity.Game;
 import java.util.Collections;
 import java.util.Optional;
@@ -32,7 +31,7 @@ class KalahControllerTest {
 
     @Test
     void verifyCreateGameOk() {
-        Game gameFixture = createGameFixture();
+        Game gameFixture = GameFixtures.createGameFixture();
         when(kalahService.createGame()).thenReturn(gameFixture);
         ResponseEntity<Game> game = this.kalahController.createGame();
 
@@ -42,7 +41,7 @@ class KalahControllerTest {
 
     @Test
     void verifyModifyGameOk() {
-        Game gameFixture = createGameFixture();
+        Game gameFixture = GameFixtures.createGameFixture();
         when(kalahService.updateGame(anyLong(), anyMap())).thenReturn(Optional.of(gameFixture));
         ResponseEntity<Game> game = this.kalahController.modifyGameBoard(1L, Collections.emptyMap());
 
@@ -52,7 +51,7 @@ class KalahControllerTest {
 
     @Test
     void verifyRetrievesGameOk() {
-        Game gameFixture = createGameFixture();
+        Game gameFixture = GameFixtures.createGameFixture();
         when(kalahService.findByGameId(anyLong())).thenReturn(Optional.of(gameFixture));
         ResponseEntity<Game> game = this.kalahController.retrieveGame(1L);
 
@@ -62,17 +61,12 @@ class KalahControllerTest {
 
     @Test
     void verifyMakeMoveOk() {
-        Game gameFixture = createGameFixture();
+        Game gameFixture = GameFixtures.createGameFixture();
         when(kalahService.makeMove(1L, 1)).thenReturn(Optional.of(gameFixture));
         ResponseEntity<Game> game = this.kalahController.makeMove(1L, 1);
 
         assertEquals(HttpStatus.OK, game.getStatusCode());
         assertEquals(gameFixture, game.getBody());
-    }
-
-    private Game createGameFixture() {
-        Integer[] arrayInts = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-        return new Game("userA", "userB", new Board(arrayInts).asJson());
     }
 
 }

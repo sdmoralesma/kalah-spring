@@ -23,6 +23,13 @@ public class Game {
     public Game() {
     }
 
+    public Game(Long id, String userA, String userB, String board) {
+        this.id = id;
+        this.userA = userA;
+        this.userB = userB;
+        this.board = board;
+    }
+
     public Game(String userA, String userB, String board) {
         this.userA = userA;
         this.userB = userB;
